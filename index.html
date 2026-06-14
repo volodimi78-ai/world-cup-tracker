@@ -183,6 +183,68 @@
       margin-bottom: 14px;
     }
 
+    .today-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 22px rgba(18, 34, 27, .06);
+    }
+
+    .today-panel header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .today-panel h2 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .today-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0;
+    }
+
+    .day-box {
+      padding: 12px;
+      border-right: 1px solid var(--line);
+    }
+
+    .day-box:last-child {
+      border-right: 0;
+    }
+
+    .day-box h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .mini-match {
+      display: grid;
+      grid-template-columns: 58px 1fr auto;
+      gap: 8px;
+      align-items: center;
+      padding: 7px 0;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+    }
+
+    .mini-match:first-of-type {
+      border-top: 0;
+    }
+
+    .mini-match strong {
+      font-size: 14px;
+    }
+
     .tab {
       background: transparent;
       border-color: transparent;
@@ -543,6 +605,16 @@
       .summary {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+      .today-grid {
+        grid-template-columns: 1fr;
+      }
+      .day-box {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .day-box:last-child {
+        border-bottom: 0;
+      }
       .toolbar {
         grid-template-columns: 1fr;
       }
@@ -585,6 +657,8 @@
 
     <main class="layout">
       <section class="summary" id="summary"></section>
+
+      <section class="today-panel" id="todayTomorrow"></section>
 
       <nav class="tabs" aria-label="Разделы">
         <button class="tab active" data-tab="matches">Матчи</button>
@@ -879,6 +953,7 @@
     function init() {
       Object.assign(els, {
         summary: document.querySelector("#summary"),
+        todayTomorrow: document.querySelector("#todayTomorrow"),
         matchList: document.querySelector("#matchList"),
         groupsGrid: document.querySelector("#groupsGrid"),
         scorersPanel: document.querySelector("#scorersPanel"),
@@ -920,6 +995,7 @@
 
     function render() {
       renderSummary();
+      renderTodayTomorrow();
       renderMatches();
       renderGroups();
       renderScorers();
@@ -942,6 +1018,43 @@
 
     function stat(value, label) {
       return `<div class="stat"><b>${escapeHtml(value)}</b><span>${escapeHtml(label)}</span></div>`;
+    }
+
+    function renderTodayTomorrow() {
+      const todayKey = kyivDateKey(new Date());
+      const tomorrowKey = addDaysKey(todayKey, 1);
+      const todayMatches = matchesByKyivDate(todayKey);
+      const tomorrowMatches = matchesByKyivDate(tomorrowKey);
+      els.todayTomorrow.innerHTML = `<header>
+        <h2>Сегодня и завтра</h2>
+        <span>${escapeHtml(formatKey(todayKey))} / ${escapeHtml(formatKey(tomorrowKey))}</span>
+      </header>
+      <div class="today-grid">
+        ${dayBox("Сегодня", todayMatches)}
+        ${dayBox("Завтра", tomorrowMatches)}
+      </div>`;
+    }
+
+    function dayBox(title, matches) {
+      if (!matches.length) {
+        return `<div class="day-box"><h3>${escapeHtml(title)}</h3><div class="empty">Матчей нет</div></div>`;
+      }
+      return `<div class="day-box"><h3>${escapeHtml(title)}</h3>${matches.map(miniMatch).join("")}</div>`;
+    }
+
+    function miniMatch(match) {
+      const result = getResult(match.id);
+      const score = isDone(match) ? `${result.home}:${result.away}` : timeOnly(match.utc);
+      const status = isDone(match) ? "Завершен" : result.status === "live" ? "Идет" : "Скоро";
+      return `<div class="mini-match">
+        <strong>${escapeHtml(score)}</strong>
+        <span>${escapeHtml(match.home)} - ${escapeHtml(match.away)}<br><small>Группа ${match.group} · ${escapeHtml(match.venue)}</small></span>
+        <span class="pill ${isDone(match) ? "done" : result.status === "live" ? "live" : ""}">${status}</span>
+      </div>`;
+    }
+
+    function matchesByKyivDate(key) {
+      return MATCHES.filter(match => kyivDateKey(new Date(match.utc)) === key);
     }
 
     function renderMatches() {
@@ -1276,6 +1389,43 @@
 
     function formatDate(utc) {
       return dtf.format(new Date(utc)).replace(",", "");
+    }
+
+    function timeOnly(utc) {
+      return new Intl.DateTimeFormat("ru-UA", {
+        timeZone: "Europe/Kyiv",
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(new Date(utc));
+    }
+
+    function kyivDateKey(date) {
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Europe/Kyiv",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).formatToParts(date).reduce((acc, part) => {
+        acc[part.type] = part.value;
+        return acc;
+      }, {});
+      return `${parts.year}-${parts.month}-${parts.day}`;
+    }
+
+    function addDaysKey(key, days) {
+      const date = new Date(`${key}T12:00:00Z`);
+      date.setUTCDate(date.getUTCDate() + days);
+      return date.toISOString().slice(0, 10);
+    }
+
+    function formatKey(key) {
+      const [year, month, day] = key.split("-").map(Number);
+      return new Intl.DateTimeFormat("ru-UA", {
+        timeZone: "UTC",
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+      }).format(new Date(Date.UTC(year, month - 1, day, 12)));
     }
 
     function escapeHtml(value) {
