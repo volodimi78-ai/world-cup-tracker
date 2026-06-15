@@ -1,9 +1,9 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ru">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ЧМ 2026 - трекер</title>
+  <title>Р§Рњ 2026 - С‚СЂРµРєРµСЂ</title>
   <style>
     :root {
       color-scheme: light;
@@ -640,17 +640,17 @@
         <div class="brand">
           <div class="mark" aria-hidden="true"></div>
           <div>
-            <h1>ЧМ 2026</h1>
-            <div class="sub">Личный трекер матчей, таблиц и сетки плей-офф</div>
+            <h1>Р§Рњ 2026</h1>
+            <div class="sub">Р›РёС‡РЅС‹Р№ С‚СЂРµРєРµСЂ РјР°С‚С‡РµР№, С‚Р°Р±Р»РёС† Рё СЃРµС‚РєРё РїР»РµР№-РѕС„С„</div>
           </div>
         </div>
         <div class="actions">
-          <button id="exportBtn" title="Скачать сохранение">Экспорт</button>
+          <button id="exportBtn" title="РЎРєР°С‡Р°С‚СЊ СЃРѕС…СЂР°РЅРµРЅРёРµ">Р­РєСЃРїРѕСЂС‚</button>
           <label>
             <input id="importInput" type="file" accept="application/json" hidden>
-            <button id="importBtn" type="button" title="Загрузить сохранение">Импорт</button>
+            <button id="importBtn" type="button" title="Р—Р°РіСЂСѓР·РёС‚СЊ СЃРѕС…СЂР°РЅРµРЅРёРµ">РРјРїРѕСЂС‚</button>
           </label>
-          <button id="resetBtn" title="Очистить введенные счета">Сброс</button>
+          <button id="resetBtn" title="РћС‡РёСЃС‚РёС‚СЊ РІРІРµРґРµРЅРЅС‹Рµ СЃС‡РµС‚Р°">РЎР±СЂРѕСЃ</button>
         </div>
       </div>
     </header>
@@ -660,27 +660,27 @@
 
       <section class="today-panel" id="todayTomorrow"></section>
 
-      <nav class="tabs" aria-label="Разделы">
-        <button class="tab active" data-tab="matches">Матчи</button>
-        <button class="tab" data-tab="groups">Группы</button>
-        <button class="tab" data-tab="scorers">Бомбардиры</button>
-        <button class="tab" data-tab="bracket">Сетка</button>
+      <nav class="tabs" aria-label="Р Р°Р·РґРµР»С‹">
+        <button class="tab active" data-tab="matches">РњР°С‚С‡Рё</button>
+        <button class="tab" data-tab="groups">Р“СЂСѓРїРїС‹</button>
+        <button class="tab" data-tab="scorers">Р‘РѕРјР±Р°СЂРґРёСЂС‹</button>
+        <button class="tab" data-tab="bracket">РЎРµС‚РєР°</button>
       </nav>
 
       <section class="section active" id="matches">
         <div class="section-title">
           <div>
-            <h2>Календарь</h2>
-            <p>Время показано по Киеву. Счета сохраняются в этом браузере.</p>
+            <h2>РљР°Р»РµРЅРґР°СЂСЊ</h2>
+            <p>Р’СЂРµРјСЏ РїРѕРєР°Р·Р°РЅРѕ РїРѕ РљРёРµРІСѓ. РЎС‡РµС‚Р° СЃРѕС…СЂР°РЅСЏСЋС‚СЃСЏ РІ СЌС‚РѕРј Р±СЂР°СѓР·РµСЂРµ.</p>
           </div>
         </div>
         <div class="toolbar">
-          <input id="search" type="search" placeholder="Поиск команды или города">
-          <select id="groupFilter" aria-label="Группа"></select>
-          <select id="statusFilter" aria-label="Статус">
-            <option value="all">Все матчи</option>
-            <option value="upcoming">Будущие</option>
-            <option value="done">Завершенные</option>
+          <input id="search" type="search" placeholder="РџРѕРёСЃРє РєРѕРјР°РЅРґС‹ РёР»Рё РіРѕСЂРѕРґР°">
+          <select id="groupFilter" aria-label="Р“СЂСѓРїРїР°"></select>
+          <select id="statusFilter" aria-label="РЎС‚Р°С‚СѓСЃ">
+            <option value="all">Р’СЃРµ РјР°С‚С‡Рё</option>
+            <option value="upcoming">Р‘СѓРґСѓС‰РёРµ</option>
+            <option value="done">Р—Р°РІРµСЂС€РµРЅРЅС‹Рµ</option>
           </select>
         </div>
         <div id="matchList" class="match-list"></div>
@@ -689,8 +689,8 @@
       <section class="section" id="groups">
         <div class="section-title">
           <div>
-            <h2>Таблицы групп</h2>
-            <p>Первые две команды подсвечены зеленым, третья - желтым.</p>
+            <h2>РўР°Р±Р»РёС†С‹ РіСЂСѓРїРї</h2>
+            <p>РџРµСЂРІС‹Рµ РґРІРµ РєРѕРјР°РЅРґС‹ РїРѕРґСЃРІРµС‡РµРЅС‹ Р·РµР»РµРЅС‹Рј, С‚СЂРµС‚СЊСЏ - Р¶РµР»С‚С‹Рј.</p>
           </div>
         </div>
         <div id="groupsGrid" class="groups-grid"></div>
@@ -699,8 +699,8 @@
       <section class="section" id="scorers">
         <div class="section-title">
           <div>
-            <h2>Топ-10 бомбардиров</h2>
-            <p>Автоголы показываются в матчах, но не учитываются в списке бомбардиров.</p>
+            <h2>РўРѕРї-10 Р±РѕРјР±Р°СЂРґРёСЂРѕРІ</h2>
+            <p>РђРІС‚РѕРіРѕР»С‹ РїРѕРєР°Р·С‹РІР°СЋС‚СЃСЏ РІ РјР°С‚С‡Р°С…, РЅРѕ РЅРµ СѓС‡РёС‚С‹РІР°СЋС‚СЃСЏ РІ СЃРїРёСЃРєРµ Р±РѕРјР±Р°СЂРґРёСЂРѕРІ.</p>
           </div>
         </div>
         <div id="scorersPanel" class="scorers-panel"></div>
@@ -709,11 +709,11 @@
       <section class="section" id="bracket">
         <div class="section-title">
           <div>
-            <h2>Сетка плей-офф</h2>
-            <p>После групп выбери участников в слотах. Победители матчей переходят дальше автоматически.</p>
+            <h2>РЎРµС‚РєР° РїР»РµР№-РѕС„С„</h2>
+            <p>РџРѕСЃР»Рµ РіСЂСѓРїРї РІС‹Р±РµСЂРё СѓС‡Р°СЃС‚РЅРёРєРѕРІ РІ СЃР»РѕС‚Р°С…. РџРѕР±РµРґРёС‚РµР»Рё РјР°С‚С‡РµР№ РїРµСЂРµС…РѕРґСЏС‚ РґР°Р»СЊС€Рµ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё.</p>
           </div>
         </div>
-        <div class="notice">В ЧМ-2026 восемь лучших третьих мест попадают в 1/16 финала, а конкретные пары зависят от комбинации групп. Поэтому приложение считает кандидатов, но не придумывает пары вместо официальной сетки.</div>
+        <div class="notice">Р’ Р§Рњ-2026 РІРѕСЃРµРјСЊ Р»СѓС‡С€РёС… С‚СЂРµС‚СЊРёС… РјРµСЃС‚ РїРѕРїР°РґР°СЋС‚ РІ 1/16 С„РёРЅР°Р»Р°, Р° РєРѕРЅРєСЂРµС‚РЅС‹Рµ РїР°СЂС‹ Р·Р°РІРёСЃСЏС‚ РѕС‚ РєРѕРјР±РёРЅР°С†РёРё РіСЂСѓРїРї. РџРѕСЌС‚РѕРјСѓ РїСЂРёР»РѕР¶РµРЅРёРµ СЃС‡РёС‚Р°РµС‚ РєР°РЅРґРёРґР°С‚РѕРІ, РЅРѕ РЅРµ РїСЂРёРґСѓРјС‹РІР°РµС‚ РїР°СЂС‹ РІРјРµСЃС‚Рѕ РѕС„РёС†РёР°Р»СЊРЅРѕР№ СЃРµС‚РєРё.</div>
         <div id="qualified" class="qualified"></div>
         <div class="bracket">
           <div id="bracketInner" class="bracket-inner"></div>
@@ -721,10 +721,10 @@
       </section>
 
       <div class="sources">
-        Источники стартового расписания: <a href="https://www.sbnation.com/soccer/1117513/world-cup-schedule-2026-how-to-watch-every-match-scores-and-more" target="_blank" rel="noreferrer">SB Nation, расписание группового этапа</a>,
-        <a href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/match-schedule" target="_blank" rel="noreferrer">официальная страница FIFA</a>,
+        РСЃС‚РѕС‡РЅРёРєРё СЃС‚Р°СЂС‚РѕРІРѕРіРѕ СЂР°СЃРїРёСЃР°РЅРёСЏ: <a href="https://www.sbnation.com/soccer/1117513/world-cup-schedule-2026-how-to-watch-every-match-scores-and-more" target="_blank" rel="noreferrer">SB Nation, СЂР°СЃРїРёСЃР°РЅРёРµ РіСЂСѓРїРїРѕРІРѕРіРѕ СЌС‚Р°РїР°</a>,
+        <a href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/match-schedule" target="_blank" rel="noreferrer">РѕС„РёС†РёР°Р»СЊРЅР°СЏ СЃС‚СЂР°РЅРёС†Р° FIFA</a>,
         <a href="https://terrikon.com/worldcup-2026" target="_blank" rel="noreferrer">Terrikon</a>.
-        Результаты: <a href="https://www.theguardian.com/football/2026/jun/11/mexico-south-africa-world-cup-2026" target="_blank" rel="noreferrer">Mexico 2-0 South Africa</a>,
+        Р РµР·СѓР»СЊС‚Р°С‚С‹: <a href="https://www.theguardian.com/football/2026/jun/11/mexico-south-africa-world-cup-2026" target="_blank" rel="noreferrer">Mexico 2-0 South Africa</a>,
         <a href="https://www.theguardian.com/football/live/2026/jun/12/fifa-world-cup-2026-live-south-korea-v-czechia-updates-kor-vs-cze-group-a-match-score-latest" target="_blank" rel="noreferrer">South Korea 2-1 Czechia</a>,
         <a href="https://www.theguardian.com/football/2026/jun/12/world-cup-2026-canada-bosnia-and-herzegovina-match-report" target="_blank" rel="noreferrer">Canada 1-1 Bosnia and Herzegovina</a>,
         <a href="https://www.axios.com/2026/06/13/world-cup-2026-usa-paraguay-score" target="_blank" rel="noreferrer">USA 4-1 Paraguay</a>.
@@ -964,15 +964,25 @@
         status: "done",
         source: "The Guardian, 2026-06-15",
         goals: []
+      },
+      G14: {
+        home: 1,
+        away: 1,
+        status: "done",
+        source: "The Guardian, 2026-06-15",
+        goals: [
+          { team: "Egypt", scorer: "Emam Ashour", minute: 19 },
+          { team: "Belgium", scorer: "Romelu Lukaku", minute: 66 }
+        ]
       }
     };
 
     const ROUND_SIZES = [
-      ["1/16 финала", 16],
-      ["1/8 финала", 8],
-      ["1/4 финала", 4],
-      ["1/2 финала", 2],
-      ["Финал", 1]
+      ["1/16 С„РёРЅР°Р»Р°", 16],
+      ["1/8 С„РёРЅР°Р»Р°", 8],
+      ["1/4 С„РёРЅР°Р»Р°", 4],
+      ["1/2 С„РёРЅР°Р»Р°", 2],
+      ["Р¤РёРЅР°Р»", 1]
     ];
 
     const state = loadState();
@@ -1022,8 +1032,8 @@
         bracketInner: document.querySelector("#bracketInner")
       });
 
-      els.groupFilter.innerHTML = '<option value="all">Все группы</option>' +
-        Object.keys(GROUPS).map(g => `<option value="${g}">Группа ${g}</option>`).join("");
+      els.groupFilter.innerHTML = '<option value="all">Р’СЃРµ РіСЂСѓРїРїС‹</option>' +
+        Object.keys(GROUPS).map(g => `<option value="${g}">Р“СЂСѓРїРїР° ${g}</option>`).join("");
 
       document.querySelectorAll(".tab").forEach(btn => {
         btn.addEventListener("click", () => switchTab(btn.dataset.tab));
@@ -1067,10 +1077,10 @@
       const standings = getStandings();
       const completeGroups = Object.values(standings).filter(rows => rows.every(row => row.played === 3)).length;
       els.summary.innerHTML = [
-        stat(done, "завершено матчей"),
-        stat(upcoming, "осталось в группе"),
-        stat(`${completeGroups}/12`, "готово групп"),
-        stat(next ? `${next.home} - ${next.away}` : "Плей-офф", next ? `следующий: ${formatDate(next.utc)}` : "групповой этап заполнен")
+        stat(done, "Р·Р°РІРµСЂС€РµРЅРѕ РјР°С‚С‡РµР№"),
+        stat(upcoming, "РѕСЃС‚Р°Р»РѕСЃСЊ РІ РіСЂСѓРїРїРµ"),
+        stat(`${completeGroups}/12`, "РіРѕС‚РѕРІРѕ РіСЂСѓРїРї"),
+        stat(next ? `${next.home} - ${next.away}` : "РџР»РµР№-РѕС„С„", next ? `СЃР»РµРґСѓСЋС‰РёР№: ${formatDate(next.utc)}` : "РіСЂСѓРїРїРѕРІРѕР№ СЌС‚Р°Рї Р·Р°РїРѕР»РЅРµРЅ")
       ].join("");
     }
 
@@ -1084,18 +1094,18 @@
       const todayMatches = matchesByKyivDate(todayKey);
       const tomorrowMatches = matchesByKyivDate(tomorrowKey);
       els.todayTomorrow.innerHTML = `<header>
-        <h2>Сегодня и завтра</h2>
+        <h2>РЎРµРіРѕРґРЅСЏ Рё Р·Р°РІС‚СЂР°</h2>
         <span>${escapeHtml(formatKey(todayKey))} / ${escapeHtml(formatKey(tomorrowKey))}</span>
       </header>
       <div class="today-grid">
-        ${dayBox("Сегодня", todayMatches)}
-        ${dayBox("Завтра", tomorrowMatches)}
+        ${dayBox("РЎРµРіРѕРґРЅСЏ", todayMatches)}
+        ${dayBox("Р—Р°РІС‚СЂР°", tomorrowMatches)}
       </div>`;
     }
 
     function dayBox(title, matches) {
       if (!matches.length) {
-        return `<div class="day-box"><h3>${escapeHtml(title)}</h3><div class="empty">Матчей нет</div></div>`;
+        return `<div class="day-box"><h3>${escapeHtml(title)}</h3><div class="empty">РњР°С‚С‡РµР№ РЅРµС‚</div></div>`;
       }
       return `<div class="day-box"><h3>${escapeHtml(title)}</h3>${matches.map(miniMatch).join("")}</div>`;
     }
@@ -1103,10 +1113,10 @@
     function miniMatch(match) {
       const result = getResult(match.id);
       const score = isDone(match) ? `${result.home}:${result.away}` : timeOnly(match.utc);
-      const status = isDone(match) ? "Завершен" : result.status === "live" ? "Идет" : "Скоро";
+      const status = isDone(match) ? "Р—Р°РІРµСЂС€РµРЅ" : result.status === "live" ? "РРґРµС‚" : "РЎРєРѕСЂРѕ";
       return `<div class="mini-match">
         <strong>${escapeHtml(score)}</strong>
-        <span>${escapeHtml(match.home)} - ${escapeHtml(match.away)}<br><small>Группа ${match.group} · ${escapeHtml(match.venue)}</small></span>
+        <span>${escapeHtml(match.home)} - ${escapeHtml(match.away)}<br><small>Р“СЂСѓРїРїР° ${match.group} В· ${escapeHtml(match.venue)}</small></span>
         <span class="pill ${isDone(match) ? "done" : result.status === "live" ? "live" : ""}">${status}</span>
       </div>`;
     }
@@ -1128,7 +1138,7 @@
         return true;
       });
 
-      els.matchList.innerHTML = filtered.length ? filtered.map(matchCard).join("") : '<div class="empty">Ничего не найдено</div>';
+      els.matchList.innerHTML = filtered.length ? filtered.map(matchCard).join("") : '<div class="empty">РќРёС‡РµРіРѕ РЅРµ РЅР°Р№РґРµРЅРѕ</div>';
       els.matchList.querySelectorAll("[data-match-input]").forEach(input => {
         input.addEventListener("input", handleScoreInput);
       });
@@ -1144,7 +1154,7 @@
       const goals = goalTooltip(match, r);
       return `<article class="match">
         <div class="match-head">
-          <span>Группа ${match.group} · ${formatDate(match.utc)}</span>
+          <span>Р“СЂСѓРїРїР° ${match.group} В· ${formatDate(match.utc)}</span>
           <span class="pill ${done ? "done" : status === "live" ? "live" : ""}">${statusLabel(status, done)}</span>
         </div>
         <div class="teams">
@@ -1161,10 +1171,10 @@
         </div>
         <div class="status-row">
           <div class="venue">${escapeHtml(match.venue)}</div>
-          <select data-match-status="${match.id}" aria-label="Статус матча">
-            ${option("upcoming", "Скоро", status)}
-            ${option("live", "Идет", status)}
-            ${option("done", "Завершен", status)}
+          <select data-match-status="${match.id}" aria-label="РЎС‚Р°С‚СѓСЃ РјР°С‚С‡Р°">
+            ${option("upcoming", "РЎРєРѕСЂРѕ", status)}
+            ${option("live", "РРґРµС‚", status)}
+            ${option("done", "Р—Р°РІРµСЂС€РµРЅ", status)}
           </select>
         </div>
       </article>`;
@@ -1173,14 +1183,14 @@
     function goalTooltip(match, result) {
       if (!isDone(match)) return "";
       if (!Array.isArray(result.goals) || result.goals.length === 0) {
-        return `<div class="goal-tooltip"><b>Голы</b><span>Авторы голов пока не внесены.</span></div>`;
+        return `<div class="goal-tooltip"><b>Р“РѕР»С‹</b><span>РђРІС‚РѕСЂС‹ РіРѕР»РѕРІ РїРѕРєР° РЅРµ РІРЅРµСЃРµРЅС‹.</span></div>`;
       }
       const items = result.goals.map(goal => {
-        const minute = goal.minute === null || goal.minute === undefined ? "минута не указана" : `${goal.minute}'`;
-        const own = goal.ownGoal ? "автогол, " : "";
-        return `<li>${escapeHtml(minute)} · ${escapeHtml(goal.scorer)} (${own}${escapeHtml(goal.team)})</li>`;
+        const minute = goal.minute === null || goal.minute === undefined ? "РјРёРЅСѓС‚Р° РЅРµ СѓРєР°Р·Р°РЅР°" : `${goal.minute}'`;
+        const own = goal.ownGoal ? "Р°РІС‚РѕРіРѕР», " : "";
+        return `<li>${escapeHtml(minute)} В· ${escapeHtml(goal.scorer)} (${own}${escapeHtml(goal.team)})</li>`;
       }).join("");
-      return `<div class="goal-tooltip"><b>Голы</b><ul>${items}</ul></div>`;
+      return `<div class="goal-tooltip"><b>Р“РѕР»С‹</b><ul>${items}</ul></div>`;
     }
 
     function scoreValue(value) {
@@ -1192,9 +1202,9 @@
     }
 
     function statusLabel(status, done) {
-      if (done) return "Завершен";
-      if (status === "live") return "Идет";
-      return "Скоро";
+      if (done) return "Р—Р°РІРµСЂС€РµРЅ";
+      if (status === "live") return "РРґРµС‚";
+      return "РЎРєРѕСЂРѕ";
     }
 
     function handleScoreInput(event) {
@@ -1258,9 +1268,9 @@
     function renderGroups() {
       const standings = getStandings();
       els.groupsGrid.innerHTML = Object.entries(standings).map(([group, rows]) => `<section class="group">
-        <h3>Группа ${group}</h3>
+        <h3>Р“СЂСѓРїРїР° ${group}</h3>
         <table>
-          <thead><tr><th>Команда</th><th>И</th><th>В</th><th>Н</th><th>П</th><th>М</th><th>О</th></tr></thead>
+          <thead><tr><th>РљРѕРјР°РЅРґР°</th><th>Р</th><th>Р’</th><th>Рќ</th><th>Рџ</th><th>Рњ</th><th>Рћ</th></tr></thead>
           <tbody>
             ${rows.map((row, idx) => `<tr class="${idx < 2 ? "qualify" : idx === 2 ? "third" : ""}">
               <td>${escapeHtml(row.team)}</td><td>${row.played}</td><td>${row.won}</td><td>${row.drawn}</td><td>${row.lost}</td><td>${row.gf}-${row.ga}</td><td><b>${row.pts}</b></td>
@@ -1273,11 +1283,11 @@
     function renderScorers() {
       const rows = getScorers().slice(0, 10);
       if (!rows.length) {
-        els.scorersPanel.innerHTML = '<div class="empty">Бомбардиры появятся после внесения авторов голов</div>';
+        els.scorersPanel.innerHTML = '<div class="empty">Р‘РѕРјР±Р°СЂРґРёСЂС‹ РїРѕСЏРІСЏС‚СЃСЏ РїРѕСЃР»Рµ РІРЅРµСЃРµРЅРёСЏ Р°РІС‚РѕСЂРѕРІ РіРѕР»РѕРІ</div>';
         return;
       }
       els.scorersPanel.innerHTML = `<table>
-        <thead><tr><th>#</th><th>Игрок</th><th>Сборная</th><th>Голы</th><th>Матчи</th></tr></thead>
+        <thead><tr><th>#</th><th>РРіСЂРѕРє</th><th>РЎР±РѕСЂРЅР°СЏ</th><th>Р“РѕР»С‹</th><th>РњР°С‚С‡Рё</th></tr></thead>
         <tbody>
           ${rows.map((row, idx) => `<tr>
             <td>${idx + 1}</td>
@@ -1318,7 +1328,7 @@
       Object.entries(standings).forEach(([group, rows]) => {
         const complete = rows.every(row => row.played === 3);
         if (!complete) {
-          waiting.push(`Группа ${group}`);
+          waiting.push(`Р“СЂСѓРїРїР° ${group}`);
           return;
         }
         if (rows[0]) firstSecond.push({ ...rows[0], label: `1${group}` });
@@ -1337,10 +1347,10 @@
     function renderBracket() {
       const q = getQualified();
       els.qualified.innerHTML = [
-        qualBox("1-2 места", q.firstSecond.map(item => `${item.label}: ${item.team}`)),
-        qualBox("Лучшие третьи", q.thirds.slice(0, 8).map(item => `${item.label}: ${item.team}`)),
-        qualBox("На грани", q.thirds.slice(8).map(item => `${item.label}: ${item.team}`)),
-        qualBox("Ждут завершения", q.waiting)
+        qualBox("1-2 РјРµСЃС‚Р°", q.firstSecond.map(item => `${item.label}: ${item.team}`)),
+        qualBox("Р›СѓС‡С€РёРµ С‚СЂРµС‚СЊРё", q.thirds.slice(0, 8).map(item => `${item.label}: ${item.team}`)),
+        qualBox("РќР° РіСЂР°РЅРё", q.thirds.slice(8).map(item => `${item.label}: ${item.team}`)),
+        qualBox("Р–РґСѓС‚ Р·Р°РІРµСЂС€РµРЅРёСЏ", q.waiting)
       ].join("");
 
       const teams = q.all.map(item => item.team);
@@ -1356,7 +1366,7 @@
     }
 
     function qualBox(title, items) {
-      return `<div class="qual-box"><h3>${escapeHtml(title)}</h3>${items.length ? `<ol>${items.map(i => `<li>${escapeHtml(i)}</li>`).join("")}</ol>` : '<span class="pill">ожидает результатов</span>'}</div>`;
+      return `<div class="qual-box"><h3>${escapeHtml(title)}</h3>${items.length ? `<ol>${items.map(i => `<li>${escapeHtml(i)}</li>`).join("")}</ol>` : '<span class="pill">РѕР¶РёРґР°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ</span>'}</div>`;
     }
 
     function tieCard(roundIndex, tieIndex, teams) {
@@ -1372,16 +1382,16 @@
         ${selectTeam(id, "a", a, optionsA)}
         ${selectTeam(id, "b", b, optionsB)}
         <div class="small-score">
-          <input data-bracket="${id}" data-field="sa" type="number" min="0" max="30" value="${scoreValue(tie.sa)}" aria-label="Счет 1">
-          <input data-bracket="${id}" data-field="sb" type="number" min="0" max="30" value="${scoreValue(tie.sb)}" aria-label="Счет 2">
+          <input data-bracket="${id}" data-field="sa" type="number" min="0" max="30" value="${scoreValue(tie.sa)}" aria-label="РЎС‡РµС‚ 1">
+          <input data-bracket="${id}" data-field="sb" type="number" min="0" max="30" value="${scoreValue(tie.sb)}" aria-label="РЎС‡РµС‚ 2">
         </div>
       </div>`;
     }
 
     function selectTeam(id, field, value, teams) {
       const unique = [...new Set(teams.filter(Boolean))];
-      return `<select data-bracket="${id}" data-field="${field}" aria-label="Команда">
-        <option value="">Команда</option>
+      return `<select data-bracket="${id}" data-field="${field}" aria-label="РљРѕРјР°РЅРґР°">
+        <option value="">РљРѕРјР°РЅРґР°</option>
         ${unique.map(team => `<option value="${escapeAttr(team)}" ${team === value ? "selected" : ""}>${escapeHtml(team)}</option>`).join("")}
       </select>`;
     }
@@ -1438,7 +1448,7 @@
     }
 
     function resetState() {
-      if (!confirm("Очистить все введенные счета и сетку?")) return;
+      if (!confirm("РћС‡РёСЃС‚РёС‚СЊ РІСЃРµ РІРІРµРґРµРЅРЅС‹Рµ СЃС‡РµС‚Р° Рё СЃРµС‚РєСѓ?")) return;
       state.results = {};
       state.bracket = {};
       saveState();
@@ -1498,3 +1508,4 @@
   </script>
 </body>
 </html>
+
