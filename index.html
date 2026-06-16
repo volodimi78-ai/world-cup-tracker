@@ -25,14 +25,7 @@
     body {
       margin: 0;
       color: var(--ink);
-      background:
-        linear-gradient(180deg, rgba(234, 241, 237, .88) 0, rgba(249, 251, 250, .96) 360px),
-        var(--page-image, none),
-        #f9fbfa;
-      background-size: auto, min(760px, 82vw) auto, auto;
-      background-position: top center, center 92px, top left;
-      background-repeat: no-repeat;
-      background-attachment: scroll, fixed, scroll;
+      background: #f5f8f6;
       letter-spacing: 0;
     }
 
@@ -42,6 +35,30 @@
 
     body[data-tab="scorers"] {
       --page-image: url("assets/scorers-stadium.webp");
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background-image: var(--page-image, none);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: .34;
+      transition: opacity .2s ease, background-image .2s ease;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(180deg, rgba(245, 248, 246, .68) 0%, rgba(245, 248, 246, .82) 42%, rgba(245, 248, 246, .76) 100%),
+        radial-gradient(circle at 50% 20%, rgba(255, 255, 255, .24), transparent 38%);
+      pointer-events: none;
     }
 
     button, input, select {
@@ -165,7 +182,7 @@
 
     body[data-tab="matches"] .layout,
     body[data-tab="scorers"] .layout {
-      padding-top: 230px;
+      padding-top: 18px;
     }
 
     body[data-tab="matches"] .summary,
@@ -667,7 +684,7 @@
       .layout, .topbar-inner { padding-inline: 12px; }
       body[data-tab="matches"] .layout,
       body[data-tab="scorers"] .layout {
-        padding-top: 170px;
+        padding-top: 12px;
       }
       .summary { grid-template-columns: 1fr; }
       .teams { grid-template-columns: 1fr; }
