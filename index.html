@@ -25,8 +25,23 @@
     body {
       margin: 0;
       color: var(--ink);
-      background: linear-gradient(180deg, #eaf1ed 0, #f9fbfa 280px);
+      background:
+        linear-gradient(180deg, rgba(234, 241, 237, .88) 0, rgba(249, 251, 250, .96) 360px),
+        var(--page-image, none),
+        #f9fbfa;
+      background-size: auto, min(760px, 82vw) auto, auto;
+      background-position: top center, center 92px, top left;
+      background-repeat: no-repeat;
+      background-attachment: scroll, fixed, scroll;
       letter-spacing: 0;
+    }
+
+    body[data-tab="matches"] {
+      --page-image: url("assets/worldcup-2026-hero.webp");
+    }
+
+    body[data-tab="scorers"] {
+      --page-image: url("assets/scorers-stadium.webp");
     }
 
     button, input, select {
@@ -146,6 +161,23 @@
       max-width: 1420px;
       margin: 0 auto;
       padding: 18px;
+    }
+
+    body[data-tab="matches"] .layout,
+    body[data-tab="scorers"] .layout {
+      padding-top: 230px;
+    }
+
+    body[data-tab="matches"] .summary,
+    body[data-tab="matches"] .today-panel,
+    body[data-tab="matches"] .tabs,
+    body[data-tab="matches"] .section.active,
+    body[data-tab="scorers"] .summary,
+    body[data-tab="scorers"] .today-panel,
+    body[data-tab="scorers"] .tabs,
+    body[data-tab="scorers"] .section.active {
+      position: relative;
+      z-index: 1;
     }
 
     .summary {
@@ -402,6 +434,14 @@
       white-space: nowrap;
     }
 
+    .flag {
+      display: inline-block;
+      margin-right: 6px;
+      font-size: 1.12em;
+      line-height: 1;
+      vertical-align: -0.08em;
+    }
+
     .pill {
       display: inline-flex;
       align-items: center;
@@ -625,6 +665,10 @@
 
     @media (max-width: 520px) {
       .layout, .topbar-inner { padding-inline: 12px; }
+      body[data-tab="matches"] .layout,
+      body[data-tab="scorers"] .layout {
+        padding-top: 170px;
+      }
       .summary { grid-template-columns: 1fr; }
       .teams { grid-template-columns: 1fr; }
       .teams .away { text-align: left; }
@@ -746,6 +790,57 @@
       J: ["Argentina", "Algeria", "Austria", "Jordan"],
       K: ["Portugal", "DR Congo", "Uzbekistan", "Colombia"],
       L: ["England", "Croatia", "Ghana", "Panama"]
+    };
+
+    const FLAGS = {
+      "Mexico": "🇲🇽",
+      "South Africa": "🇿🇦",
+      "South Korea": "🇰🇷",
+      "Czechia": "🇨🇿",
+      "Canada": "🇨🇦",
+      "Bosnia and Herzegovina": "🇧🇦",
+      "Qatar": "🇶🇦",
+      "Switzerland": "🇨🇭",
+      "Brazil": "🇧🇷",
+      "Morocco": "🇲🇦",
+      "Haiti": "🇭🇹",
+      "Scotland": "🏴",
+      "United States": "🇺🇸",
+      "Paraguay": "🇵🇾",
+      "Australia": "🇦🇺",
+      "Turkey": "🇹🇷",
+      "Germany": "🇩🇪",
+      "Curacao": "🇨🇼",
+      "Ivory Coast": "🇨🇮",
+      "Ecuador": "🇪🇨",
+      "Netherlands": "🇳🇱",
+      "Japan": "🇯🇵",
+      "Sweden": "🇸🇪",
+      "Tunisia": "🇹🇳",
+      "Belgium": "🇧🇪",
+      "Egypt": "🇪🇬",
+      "Iran": "🇮🇷",
+      "New Zealand": "🇳🇿",
+      "Spain": "🇪🇸",
+      "Cabo Verde": "🇨🇻",
+      "Saudi Arabia": "🇸🇦",
+      "Uruguay": "🇺🇾",
+      "France": "🇫🇷",
+      "Senegal": "🇸🇳",
+      "Iraq": "🇮🇶",
+      "Norway": "🇳🇴",
+      "Argentina": "🇦🇷",
+      "Algeria": "🇩🇿",
+      "Austria": "🇦🇹",
+      "Jordan": "🇯🇴",
+      "Portugal": "🇵🇹",
+      "DR Congo": "🇨🇩",
+      "Uzbekistan": "🇺🇿",
+      "Colombia": "🇨🇴",
+      "England": "🏴",
+      "Croatia": "🇭🇷",
+      "Ghana": "🇬🇭",
+      "Panama": "🇵🇦"
     };
 
     const MATCHES = [
@@ -1065,12 +1160,14 @@
       document.querySelector("#importBtn").addEventListener("click", () => document.querySelector("#importInput").click());
       document.querySelector("#importInput").addEventListener("change", importState);
       document.querySelector("#resetBtn").addEventListener("click", resetState);
+      document.body.dataset.tab = "matches";
       render();
     }
 
     function switchTab(id) {
       document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab === id));
       document.querySelectorAll(".section").forEach(s => s.classList.toggle("active", s.id === id));
+      document.body.dataset.tab = id;
       render();
     }
 
@@ -1138,7 +1235,7 @@
       const status = isDone(match) ? "Завершен" : result.status === "live" ? "Идет" : "Скоро";
       return `<div class="mini-match">
         <strong>${escapeHtml(score)}</strong>
-        <span>${escapeHtml(match.home)} - ${escapeHtml(match.away)}<br><small>Группа ${match.group} · ${escapeHtml(match.venue)}</small></span>
+        <span>${teamLabel(match.home)} - ${teamLabel(match.away)}<br><small>Группа ${match.group} · ${escapeHtml(match.venue)}</small></span>
         <span class="pill ${isDone(match) ? "done" : result.status === "live" ? "live" : ""}">${status}</span>
       </div>`;
     }
@@ -1180,7 +1277,7 @@
           <span class="pill ${done ? "done" : status === "live" ? "live" : ""}">${statusLabel(status, done)}</span>
         </div>
         <div class="teams">
-          <span>${escapeHtml(match.home)}</span>
+          <span>${teamLabel(match.home)}</span>
           <div class="score-wrap">
             <div class="score">
               <input data-match-input="${match.id}" data-side="home" type="number" min="0" max="30" value="${scoreValue(r.home)}" aria-label="${match.home}">
@@ -1189,7 +1286,7 @@
             </div>
             ${goals}
           </div>
-          <span class="away">${escapeHtml(match.away)}</span>
+          <span class="away">${teamLabel(match.away)}</span>
         </div>
         <div class="status-row">
           <div class="venue">${escapeHtml(match.venue)}</div>
@@ -1295,7 +1392,7 @@
           <thead><tr><th>Команда</th><th>И</th><th>В</th><th>Н</th><th>П</th><th>М</th><th>О</th></tr></thead>
           <tbody>
             ${rows.map((row, idx) => `<tr class="${idx < 2 ? "qualify" : idx === 2 ? "third" : ""}">
-              <td>${escapeHtml(row.team)}</td><td>${row.played}</td><td>${row.won}</td><td>${row.drawn}</td><td>${row.lost}</td><td>${row.gf}-${row.ga}</td><td><b>${row.pts}</b></td>
+              <td>${teamLabel(row.team)}</td><td>${row.played}</td><td>${row.won}</td><td>${row.drawn}</td><td>${row.lost}</td><td>${row.gf}-${row.ga}</td><td><b>${row.pts}</b></td>
             </tr>`).join("")}
           </tbody>
         </table>
@@ -1314,7 +1411,7 @@
           ${rows.map((row, idx) => `<tr>
             <td>${idx + 1}</td>
             <td>${escapeHtml(row.player)}</td>
-            <td>${escapeHtml(row.team)}</td>
+            <td>${teamLabel(row.team)}</td>
             <td><b>${row.goals}</b></td>
             <td>${escapeHtml(row.matches.join(", "))}</td>
           </tr>`).join("")}
@@ -1388,7 +1485,7 @@
     }
 
     function qualBox(title, items) {
-      return `<div class="qual-box"><h3>${escapeHtml(title)}</h3>${items.length ? `<ol>${items.map(i => `<li>${escapeHtml(i)}</li>`).join("")}</ol>` : '<span class="pill">ожидает результатов</span>'}</div>`;
+      return `<div class="qual-box"><h3>${escapeHtml(title)}</h3>${items.length ? `<ol>${items.map(i => `<li>${formatQualifiedItem(i)}</li>`).join("")}</ol>` : '<span class="pill">ожидает результатов</span>'}</div>`;
     }
 
     function tieCard(roundIndex, tieIndex, teams) {
@@ -1414,7 +1511,7 @@
       const unique = [...new Set(teams.filter(Boolean))];
       return `<select data-bracket="${id}" data-field="${field}" aria-label="Команда">
         <option value="">Команда</option>
-        ${unique.map(team => `<option value="${escapeAttr(team)}" ${team === value ? "selected" : ""}>${escapeHtml(team)}</option>`).join("")}
+        ${unique.map(team => `<option value="${escapeAttr(team)}" ${team === value ? "selected" : ""}>${escapeHtml(`${FLAGS[team] ? FLAGS[team] + " " : ""}${team}`)}</option>`).join("")}
       </select>`;
     }
 
@@ -1516,6 +1613,19 @@
         month: "2-digit",
         year: "numeric"
       }).format(new Date(Date.UTC(year, month - 1, day, 12)));
+    }
+
+    function teamLabel(team) {
+      const flag = FLAGS[team];
+      return `${flag ? `<span class="flag" aria-hidden="true">${escapeHtml(flag)}</span>` : ""}${escapeHtml(team)}`;
+    }
+
+    function formatQualifiedItem(text) {
+      const parts = String(text).split(": ");
+      if (parts.length < 2) return escapeHtml(text);
+      const label = parts.shift();
+      const team = parts.join(": ");
+      return `${escapeHtml(label)}: ${teamLabel(team)}`;
     }
 
     function escapeHtml(value) {
