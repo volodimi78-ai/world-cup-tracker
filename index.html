@@ -445,6 +445,14 @@
       overflow-y: auto;
     }
 
+    .goal-video {
+      color: #d7f4e7;
+      margin-left: 6px;
+      white-space: nowrap;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
     .score input {
       width: 48px;
       text-align: center;
@@ -556,6 +564,29 @@
       display: inline-flex;
       align-items: center;
       gap: 10px;
+    }
+
+    .video-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(14, 33, 25, .9);
+      color: #fff;
+      text-decoration: none;
+      font-size: 11px;
+      line-height: 1;
+      box-shadow: 0 4px 10px rgba(7, 18, 13, .18);
+      text-shadow: none;
+      flex: 0 0 auto;
+    }
+
+    .video-link:hover,
+    .video-link:focus {
+      background: #d71920;
+      color: #fff;
     }
 
     .player-photo {
@@ -1400,7 +1431,8 @@
       const items = result.goals.map(goal => {
         const minute = goal.minute === null || goal.minute === undefined ? "минута не указана" : `${goal.minute}'`;
         const own = goal.ownGoal ? "автогол, " : "";
-        return `<li>${escapeHtml(minute)} · ${escapeHtml(goal.scorer)} (${own}${escapeHtml(goal.team)})</li>`;
+        const video = videoLink(goal.scorer, match, goal, "видео", "goal-video");
+        return `<li>${escapeHtml(minute)} · ${escapeHtml(goal.scorer)} (${own}${escapeHtml(goal.team)}) ${video}</li>`;
       }).join("");
       return `<div class="goal-tooltip"><b>Голы</b><ul>${items}</ul></div>`;
     }
@@ -1514,7 +1546,15 @@
     }
 
     function playerLabel(player) {
-      return `<span class="player-cell"><span>${escapeHtml(player)}</span><span class="player-photo" data-player-photo="${escapeAttr(player)}">${escapeHtml(initials(player))}</span></span>`;
+      return `<span class="player-cell"><span>${escapeHtml(player)}</span><span class="player-photo" data-player-photo="${escapeAttr(player)}">${escapeHtml(initials(player))}</span>${videoLink(player, null, null, "▶", "video-link")}</span>`;
+    }
+
+    function videoLink(player, match, goal, label, className) {
+      const parts = [player, "goal", "World Cup 2026"];
+      if (match) parts.push(match.home, match.away);
+      if (goal?.minute !== null && goal?.minute !== undefined) parts.push(`${goal.minute} minute`);
+      const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(parts.join(" "))}`;
+      return `<a class="${className}" href="${escapeAttr(url)}" target="_blank" rel="noopener" title="Искать видео гола ${escapeAttr(player)}">${escapeHtml(label)}</a>`;
     }
 
     function initials(name) {
