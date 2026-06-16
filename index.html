@@ -46,7 +46,7 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      opacity: .34;
+      opacity: .62;
       transition: opacity .2s ease, background-image .2s ease;
     }
 
@@ -56,8 +56,8 @@
       inset: 0;
       z-index: -1;
       background:
-        linear-gradient(180deg, rgba(245, 248, 246, .68) 0%, rgba(245, 248, 246, .82) 42%, rgba(245, 248, 246, .76) 100%),
-        radial-gradient(circle at 50% 20%, rgba(255, 255, 255, .24), transparent 38%);
+        linear-gradient(180deg, rgba(245, 248, 246, .36) 0%, rgba(245, 248, 246, .56) 42%, rgba(245, 248, 246, .46) 100%),
+        radial-gradient(circle at 50% 20%, rgba(255, 255, 255, .16), transparent 38%);
       pointer-events: none;
     }
 
@@ -205,12 +205,13 @@
     }
 
     .stat {
-      background: var(--panel);
+      background: rgba(255, 255, 255, .76);
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 14px;
       box-shadow: 0 8px 22px rgba(18, 34, 27, .06);
       min-height: 82px;
+      backdrop-filter: blur(6px);
     }
 
     .stat b {
@@ -233,12 +234,13 @@
     }
 
     .today-panel {
-      background: var(--panel);
+      background: rgba(255, 255, 255, .72);
       border: 1px solid var(--line);
       border-radius: 8px;
       margin-bottom: 16px;
       overflow: hidden;
       box-shadow: 0 8px 22px rgba(18, 34, 27, .06);
+      backdrop-filter: blur(6px);
     }
 
     .today-panel header {
@@ -347,12 +349,13 @@
     }
 
     .match {
-      background: var(--panel);
+      background: rgba(255, 255, 255, .74);
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 12px;
       display: grid;
       gap: 10px;
+      backdrop-filter: blur(6px);
     }
 
     .match-head {
@@ -481,10 +484,11 @@
     }
 
     .scorers-panel {
-      background: var(--panel);
+      background: rgba(255, 255, 255, .68);
       border: 1px solid var(--line);
       border-radius: 8px;
       overflow: hidden;
+      backdrop-filter: blur(5px);
     }
 
     .scorers-panel table {
@@ -504,14 +508,15 @@
     }
 
     .scorers-panel tbody tr:first-child {
-      background: #fff8e8;
+      background: rgba(255, 248, 232, .78);
     }
 
     .group {
-      background: var(--panel);
+      background: rgba(255, 255, 255, .72);
       border: 1px solid var(--line);
       border-radius: 8px;
       overflow: hidden;
+      backdrop-filter: blur(6px);
     }
 
     .group h3 {
@@ -541,11 +546,11 @@
     }
 
     tbody tr.qualify {
-      background: #edf7f1;
+      background: rgba(237, 247, 241, .78);
     }
 
     tbody tr.third {
-      background: #fff8e8;
+      background: rgba(255, 248, 232, .78);
     }
 
     .qualified {
@@ -556,11 +561,12 @@
     }
 
     .qual-box {
-      background: var(--panel);
+      background: rgba(255, 255, 255, .72);
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 12px;
       min-height: 94px;
+      backdrop-filter: blur(6px);
     }
 
     .qual-box h3 {
@@ -600,13 +606,14 @@
     }
 
     .tie {
-      background: var(--panel);
+      background: rgba(255, 255, 255, .74);
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 8px;
       display: grid;
       gap: 7px;
       min-height: 82px;
+      backdrop-filter: blur(6px);
     }
 
     .tie select {
