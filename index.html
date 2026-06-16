@@ -234,13 +234,14 @@
     }
 
     .today-panel {
-      background: rgba(255, 255, 255, .72);
-      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .09);
+      border: 1px solid rgba(255, 255, 255, .26);
       border-radius: 8px;
       margin-bottom: 16px;
       overflow: hidden;
-      box-shadow: 0 8px 22px rgba(18, 34, 27, .06);
-      backdrop-filter: blur(6px);
+      box-shadow: 0 10px 24px rgba(7, 18, 13, .08);
+      backdrop-filter: blur(4px);
+      text-shadow: 0 1px 0 rgba(255, 255, 255, .7);
     }
 
     .today-panel header {
@@ -248,8 +249,9 @@
       justify-content: space-between;
       gap: 12px;
       padding: 12px 14px;
-      background: var(--ink);
+      background: rgba(14, 33, 25, .78);
       color: #fff;
+      text-shadow: none;
     }
 
     .today-panel h2 {
@@ -265,7 +267,7 @@
 
     .day-box {
       padding: 12px;
-      border-right: 1px solid var(--line);
+      border-right: 1px solid rgba(255, 255, 255, .24);
     }
 
     .day-box:last-child {
@@ -284,7 +286,7 @@
       gap: 8px;
       align-items: center;
       padding: 7px 0;
-      border-top: 1px solid var(--line);
+      border-top: 1px solid rgba(255, 255, 255, .22);
       font-size: 13px;
     }
 
