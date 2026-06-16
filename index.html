@@ -349,13 +349,15 @@
     }
 
     .match {
-      background: rgba(255, 255, 255, .74);
-      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .36);
+      border: 1px solid rgba(255, 255, 255, .48);
       border-radius: 8px;
       padding: 12px;
       display: grid;
       gap: 10px;
-      backdrop-filter: blur(6px);
+      backdrop-filter: blur(4px);
+      box-shadow: 0 10px 24px rgba(7, 18, 13, .08);
+      text-shadow: 0 1px 0 rgba(255, 255, 255, .7);
     }
 
     .match-head {
@@ -445,6 +447,8 @@
       width: 48px;
       text-align: center;
       padding-inline: 4px;
+      background: rgba(255, 255, 255, .58);
+      backdrop-filter: blur(3px);
     }
 
     .status-row {
@@ -452,6 +456,11 @@
       grid-template-columns: 1fr auto;
       gap: 8px;
       align-items: center;
+    }
+
+    .match select {
+      background-color: rgba(255, 255, 255, .58);
+      backdrop-filter: blur(3px);
     }
 
     .venue {
