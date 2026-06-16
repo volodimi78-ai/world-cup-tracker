@@ -1180,6 +1180,18 @@
       minute: "2-digit"
     });
     const photoCache = {};
+    const PLAYER_PHOTOS = {
+      "Elijah Just": "assets/elijah-just.jpg",
+      "Folarin Balogun": "https://img.a.transfermarkt.technology/portrait/header/503770-1672838317.jpg?lm=1",
+      "Kai Havertz": "https://img.a.transfermarkt.technology/portrait/header/309400-1683903902.jpg?lm=1",
+      "Yasin Ayari": "https://img.a.transfermarkt.technology/portrait/header/667287-1746438362.jpg?lm=1",
+      "Abdulelah Al-Amri": "https://img.a.transfermarkt.technology/portrait/header/509894-1685033914.PNG?lm=1",
+      "Alexander Isak": "https://img.a.transfermarkt.technology/portrait/header/349066-1680791339.jpg?lm=1",
+      "Amad Diallo": "https://img.a.transfermarkt.technology/portrait/header/536835-1747857754.jpg?lm=1",
+      "Boualem Khoukhi": "https://img.a.transfermarkt.technology/portrait/header/222669-1725787279.jpg?lm=1",
+      "Breel Embolo": "https://img.a.transfermarkt.technology/portrait/header/237662-1779793638.jpg?lm=1",
+      "Connor Metcalfe": "https://img.a.transfermarkt.technology/portrait/header/522223-1755033011.jpg?lm=1"
+    };
 
     function m(id, group, utc, home, away, venue) {
       return { id, group, utc, home, away, venue };
@@ -1491,7 +1503,7 @@
     }
 
     function playerLabel(player) {
-      return `<span class="player-cell"><span class="player-photo" data-player-photo="${escapeAttr(player)}">${escapeHtml(initials(player))}</span><span>${escapeHtml(player)}</span></span>`;
+      return `<span class="player-cell"><span>${escapeHtml(player)}</span><span class="player-photo" data-player-photo="${escapeAttr(player)}">${escapeHtml(initials(player))}</span></span>`;
     }
 
     function initials(name) {
@@ -1513,12 +1525,13 @@
         const src = photoCache[player];
         if (!src) return;
         document.querySelectorAll(`[data-player-photo="${cssEscape(player)}"]`).forEach(el => {
-          el.innerHTML = `<img src="${escapeAttr(src)}" alt="${escapeAttr(player)}">`;
+          el.innerHTML = `<img src="${escapeAttr(src)}" alt="${escapeAttr(player)}" referrerpolicy="no-referrer" onerror="this.parentElement.textContent='${escapeAttr(initials(player))}'">`;
         });
       }));
     }
 
     async function fetchPlayerPhoto(player) {
+      if (PLAYER_PHOTOS[player]) return PLAYER_PHOTOS[player];
       try {
         const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(player)}`);
         if (!response.ok) return "";
