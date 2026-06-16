@@ -541,6 +541,37 @@
       font-size: 18px;
     }
 
+    .player-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .player-photo {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: rgba(15, 75, 53, .82);
+      color: #fff;
+      display: inline-grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: 0 4px 14px rgba(7, 18, 13, .24);
+      border: 2px solid rgba(255, 255, 255, .72);
+      flex: 0 0 auto;
+      text-shadow: none;
+    }
+
+    .player-photo img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+
     .group {
       background: rgba(255, 255, 255, .72);
       border: 1px solid var(--line);
@@ -1148,6 +1179,7 @@
       hour: "2-digit",
       minute: "2-digit"
     });
+    const photoCache = {};
 
     function m(id, group, utc, home, away, venue) {
       return { id, group, utc, home, away, venue };
@@ -1448,13 +1480,53 @@
         <tbody>
           ${rows.map((row, idx) => `<tr>
             <td>${idx + 1}</td>
-            <td>${escapeHtml(row.player)}</td>
+            <td>${playerLabel(row.player)}</td>
             <td>${teamLabel(row.team)}</td>
             <td><b>${row.goals}</b></td>
             <td>${escapeHtml(row.matches.join(", "))}</td>
           </tr>`).join("")}
         </tbody>
       </table>`;
+      loadScorerPhotos(rows);
+    }
+
+    function playerLabel(player) {
+      return `<span class="player-cell"><span class="player-photo" data-player-photo="${escapeAttr(player)}">${escapeHtml(initials(player))}</span><span>${escapeHtml(player)}</span></span>`;
+    }
+
+    function initials(name) {
+      return String(name)
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(part => part[0])
+        .join("")
+        .toUpperCase();
+    }
+
+    async function loadScorerPhotos(rows) {
+      const players = [...new Set(rows.map(row => row.player))];
+      await Promise.all(players.map(async player => {
+        if (photoCache[player] === undefined) {
+          photoCache[player] = await fetchPlayerPhoto(player);
+        }
+        const src = photoCache[player];
+        if (!src) return;
+        document.querySelectorAll(`[data-player-photo="${cssEscape(player)}"]`).forEach(el => {
+          el.innerHTML = `<img src="${escapeAttr(src)}" alt="${escapeAttr(player)}">`;
+        });
+      }));
+    }
+
+    async function fetchPlayerPhoto(player) {
+      try {
+        const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(player)}`);
+        if (!response.ok) return "";
+        const data = await response.json();
+        return data.thumbnail?.source || data.originalimage?.source || "";
+      } catch {
+        return "";
+      }
     }
 
     function getScorers() {
@@ -1664,6 +1736,13 @@
       const label = parts.shift();
       const team = parts.join(": ");
       return `${escapeHtml(label)}: ${teamLabel(team)}`;
+    }
+
+    function cssEscape(value) {
+      if (window.CSS && typeof window.CSS.escape === "function") {
+        return window.CSS.escape(value);
+      }
+      return String(value).replace(/["\\]/g, "\\$&");
     }
 
     function escapeHtml(value) {
