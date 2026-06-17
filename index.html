@@ -453,33 +453,6 @@
       text-underline-offset: 2px;
     }
 
-    .goal-video-strip {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .goal-video-chip {
-      display: inline-flex;
-      align-items: center;
-      min-height: 30px;
-      padding: 5px 8px;
-      border-radius: 999px;
-      background: rgba(14, 33, 25, .84);
-      color: #fff;
-      font-size: 12px;
-      font-weight: 700;
-      text-decoration: none;
-      text-shadow: none;
-      box-shadow: 0 4px 10px rgba(7, 18, 13, .12);
-    }
-
-    .goal-video-chip:hover,
-    .goal-video-chip:focus {
-      background: rgba(215, 25, 32, .94);
-      color: #fff;
-    }
-
     .score input {
       width: 48px;
       text-align: center;
@@ -1498,7 +1471,6 @@
       const status = r.status || "upcoming";
       const goals = goalTooltip(match, r);
       const review = done ? reviewLink(match) : "";
-      const goalVideos = done ? goalVideoStrip(match, r) : "";
       return `<article class="match">
         <div class="match-head">
           <span>Группа ${match.group} · ${formatDate(match.utc)}</span>
@@ -1525,7 +1497,6 @@
             ${option("done", "Завершен", status)}
           </select>
         </div>
-        ${goalVideos}
       </article>`;
     }
 
@@ -1552,16 +1523,6 @@
         return `<li>${escapeHtml(minute)} · ${escapeHtml(goal.scorer)} (${own}${escapeHtml(goal.team)}) ${video}</li>`;
       }).join("");
       return `<div class="goal-tooltip"><b>Голы</b><ul>${items}</ul></div>`;
-    }
-
-    function goalVideoStrip(match, result) {
-      if (!Array.isArray(result.goals) || !result.goals.length) return "";
-      const links = result.goals.map(goal => {
-        const minute = goal.minute === null || goal.minute === undefined ? "" : `${goal.minute}' `;
-        const label = `▶ ${minute}${goal.scorer}`;
-        return videoLink(goal.scorer, match, goal, label, "goal-video-chip");
-      }).join("");
-      return `<div class="goal-video-strip">${links}</div>`;
     }
 
     function scoreValue(value) {
