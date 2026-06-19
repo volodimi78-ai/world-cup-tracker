@@ -66,15 +66,21 @@ const PLAYER_MAP = {
   "Беллингем Дж.": "Jude Bellingham",
   "Барколя Б.": "Bradley Barcola",
   "Гарри Кейн": "Harry Kane",
+  "Джака Г.": "Granit Xhaka",
+  "Дэвид Дж.": "Jonathan David",
   "Даниэль Муньос": "Daniel Munoz",
   "Йоан Висса": "Yoane Wissa",
   "Калеб Йиренки": "Caleb Yirenkyi",
   "Кейн Г.": "Harry Kane",
   "Килиан Мбаппе": "Kylian Mbappe",
   "Леандро Кампас": "Leandro Campaz",
+  "Ларин К.": "Cyle Larin",
   "Луис Диас": "Luis Diaz",
+  "Манзамби": "Johan Manzambi",
   "Маркус Рэшфорд": "Marcus Rashford",
   "Марко Арнаутович": "Marko Arnautovic",
+  "Манаи": "Al-Mannai",
+  "Махмич": "Ermin Mahmic",
   "Мбаппе К.": "Kylian Mbappe",
   "Мбие И.": "Ibrahima Mbiaye",
   "Месси Л.": "Lionel Messi",
@@ -83,8 +89,11 @@ const PLAYER_MAP = {
   "Остигор Л.": "Leo Ostigard",
   "Петар Муса": "Petar Musa",
   "Романо Шмид": "Romano Schmid",
+  "Ромо": "Luis Romo",
+  "Салиба": "Nathan Saliba",
   "Садилек М.": "Michal Sadilek",
   "Торстведт К.": "Kristian Thorstvedt",
+  "Варгас Р.": "Ruben Vargas",
   "Холанд Э.": "Erling Haaland",
   "Шмид Р.": "Romano Schmid",
   "Язан Аль-Араб": "Yazan Al-Arab"
@@ -113,14 +122,14 @@ function mapTeam(name) {
 function normalizePlayer(raw) {
   let name = decodeHtml(raw)
     .replace(/\((?:п\.?|пен\.?|pen\.?|пенальти)\)/gi, "")
-    .replace(/\((?:а\/г|авт\.?|автогол|own goal)\)/gi, "")
+    .replace(/\((?:а\/г|аг|авт\.?|автогол|own goal)\)/gi, "")
     .replace(/\s+/g, " ")
     .trim();
   return PLAYER_MAP[name] || name;
 }
 
 function isOwnGoal(raw) {
-  return /\((?:а\/г|авт\.?|автогол|own goal)\)/i.test(raw);
+  return /\((?:а\/г|аг|авт\.?|автогол|own goal)\)/i.test(raw);
 }
 
 function extractMatches(html) {
