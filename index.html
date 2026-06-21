@@ -778,6 +778,38 @@
       font-size: 13px;
     }
 
+    .meta-line {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: -4px;
+    }
+
+    .third-ranking {
+      margin: 0 0 14px;
+      background: rgba(255, 255, 255, .72);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      backdrop-filter: blur(6px);
+    }
+
+    .third-ranking h3 {
+      margin: 0;
+      padding: 12px 13px;
+      background: #fff8e8;
+      color: #654700;
+      font-size: 15px;
+      border-bottom: 1px solid #eed89c;
+    }
+
+    .third-ranking tr.qualify {
+      background: rgba(237, 247, 241, .78);
+    }
+
+    .third-ranking tr.wait {
+      background: rgba(255, 248, 232, .78);
+    }
+
     @media (max-width: 860px) {
       .topbar-inner {
         grid-template-columns: 1fr;
@@ -880,6 +912,7 @@
             <p>Первые две команды подсвечены зеленым, третья - желтым.</p>
           </div>
         </div>
+        <div id="thirdRanking" class="third-ranking"></div>
         <div id="groupsGrid" class="groups-grid"></div>
       </section>
 
@@ -900,7 +933,7 @@
             <p>После групп выбери участников в слотах. Победители матчей переходят дальше автоматически.</p>
           </div>
         </div>
-        <div class="notice">В ЧМ-2026 восемь лучших третьих мест попадают в 1/16 финала, а конкретные пары зависят от комбинации групп. Поэтому приложение считает кандидатов, но не придумывает пары вместо официальной сетки.</div>
+        <div class="notice">В ЧМ-2026 первые две команды и восемь лучших третьих мест попадают в раунд 1/16 финала, а конкретные пары зависят от комбинации групп. Поэтому приложение считает кандидатов, но не придумывает пары вместо официальной сетки.</div>
         <div id="qualified" class="qualified"></div>
         <div class="bracket">
           <div id="bracketInner" class="bracket-inner"></div>
@@ -1410,14 +1443,44 @@
         home: 5,
         away: 1,
         status: "done",
-        source: "Terrikon, 2026-06-20",
+        source: "Terrikon / The Guardian, 2026-06-20",
         goals: [
-          { team: "Netherlands", scorer: "Бробби", minute: 5 },
-          { team: "Netherlands", scorer: "Бробби", minute: 17 },
-          { team: "Netherlands", scorer: "Гакпо", minute: 47 },
-          { team: "Netherlands", scorer: "Гакпо", minute: 54 },
-          { team: "Netherlands", scorer: "Саммервилл", minute: 89 },
-          { team: "Sweden", scorer: "Эланга", minute: 59 }
+          { team: "Netherlands", scorer: "Brian Brobbey", minute: 5 },
+          { team: "Netherlands", scorer: "Brian Brobbey", minute: 17 },
+          { team: "Netherlands", scorer: "Cody Gakpo", minute: 47 },
+          { team: "Netherlands", scorer: "Cody Gakpo", minute: 54 },
+          { team: "Sweden", scorer: "Anthony Elanga", minute: 59 },
+          { team: "Netherlands", scorer: "Crysencio Summerville", minute: 89 }
+        ]
+      },
+      G34: {
+        home: 2,
+        away: 1,
+        status: "done",
+        source: "Reuters / The Guardian, 2026-06-20",
+        goals: [
+          { team: "Ivory Coast", scorer: "Franck Kessie", minute: 30 },
+          { team: "Germany", scorer: "Deniz Undav", minute: 68 },
+          { team: "Germany", scorer: "Deniz Undav", minute: "90+4" }
+        ]
+      },
+      G35: {
+        home: 0,
+        away: 0,
+        status: "done",
+        source: "Reuters / The Guardian, 2026-06-21",
+        goals: []
+      },
+      G36: {
+        home: 0,
+        away: 4,
+        status: "done",
+        source: "The Guardian / Football24, 2026-06-21",
+        goals: [
+          { team: "Japan", scorer: "Daichi Kamada", minute: 4 },
+          { team: "Japan", scorer: "Ayase Ueda", minute: 31 },
+          { team: "Japan", scorer: "Junya Ito", minute: 69 },
+          { team: "Japan", scorer: "Ayase Ueda", minute: 83 }
         ]
       }
     };
@@ -1443,6 +1506,26 @@
       hour: "2-digit",
       minute: "2-digit"
     });
+
+    const localDtfCache = {};
+    const VENUE_TIME_ZONES = {
+      "Mexico City Stadium": "America/Mexico_City",
+      "Estadio Guadalajara": "America/Mexico_City",
+      "Estadio Monterrey": "America/Monterrey",
+      "Toronto Stadium": "America/Toronto",
+      "Boston Stadium": "America/New_York",
+      "New York New Jersey Stadium": "America/New_York",
+      "Philadelphia Stadium": "America/New_York",
+      "Miami Stadium": "America/New_York",
+      "Atlanta Stadium": "America/New_York",
+      "Houston Stadium": "America/Chicago",
+      "Kansas City Stadium": "America/Chicago",
+      "Dallas Stadium": "America/Chicago",
+      "Los Angeles Stadium": "America/Los_Angeles",
+      "San Francisco Bay Area Stadium": "America/Los_Angeles",
+      "Seattle Stadium": "America/Los_Angeles",
+      "BC Place Vancouver": "America/Vancouver"
+    };
     const photoCache = {};
     const PLAYER_PHOTOS = {
       "Elijah Just": "assets/elijah-just.jpg",
@@ -1486,6 +1569,7 @@
         todayTomorrow: document.querySelector("#todayTomorrow"),
         matchList: document.querySelector("#matchList"),
         groupsGrid: document.querySelector("#groupsGrid"),
+        thirdRanking: document.querySelector("#thirdRanking"),
         scorersPanel: document.querySelector("#scorersPanel"),
         groupFilter: document.querySelector("#groupFilter"),
         statusFilter: document.querySelector("#statusFilter"),
@@ -1580,7 +1664,7 @@
       const status = isDone(match) ? "Завершен" : result.status === "live" ? "Идет" : "Скоро";
       return `<div class="mini-match">
         <strong>${escapeHtml(score)}</strong>
-        <span>${teamLabel(match.home)} - ${teamLabel(match.away)}<br><small>Группа ${match.group} · ${escapeHtml(match.venue)}</small></span>
+        <span>${teamLabel(match.home)} - ${teamLabel(match.away)}<br><small>Группа ${match.group} · ${escapeHtml(match.venue)} · местное ${localTime(match)}</small></span>
         <span class="pill ${isDone(match) ? "done" : result.status === "live" ? "live" : ""}">${status}</span>
       </div>`;
     }
@@ -1635,7 +1719,7 @@
           <span class="away">${teamLabel(match.away)}</span>
         </div>
         <div class="status-row">
-          <div class="venue">${escapeHtml(match.venue)}</div>
+          <div><div class="venue">${escapeHtml(match.venue)}</div><div class="meta-line">Местное время: ${localDateTime(match)}</div></div>
           ${review}
           <select data-match-status="${match.id}" aria-label="Статус матча">
             ${option("upcoming", "Скоро", status)}
@@ -1733,18 +1817,21 @@
       });
       Object.values(groups).forEach(rows => {
         rows.forEach(row => row.gd = row.gf - row.ga);
-        rows.sort((a, b) =>
-          b.pts - a.pts ||
-          b.gd - a.gd ||
-          b.gf - a.gf ||
-          a.team.localeCompare(b.team)
-        );
+        rows.sort(compareRows);
       });
       return groups;
     }
 
+    function compareRows(a, b) {
+      return b.pts - a.pts ||
+        b.gd - a.gd ||
+        b.gf - a.gf ||
+        a.team.localeCompare(b.team);
+    }
+
     function renderGroups() {
       const standings = getStandings();
+      renderThirdRanking(standings);
       els.groupsGrid.innerHTML = Object.entries(standings).map(([group, rows]) => `<section class="group">
         <h3>Группа ${group}</h3>
         <table>
@@ -1756,6 +1843,28 @@
           </tbody>
         </table>
       </section>`).join("");
+    }
+
+    function renderThirdRanking(standings) {
+      const thirds = Object.values(standings)
+        .map(rows => rows[2])
+        .filter(Boolean)
+        .sort(compareRows);
+      els.thirdRanking.innerHTML = `<h3>Рейтинг третьих мест</h3>
+        <table>
+          <thead><tr><th>#</th><th>Команда</th><th>Гр.</th><th>И</th><th>М</th><th>О</th><th>Статус</th></tr></thead>
+          <tbody>
+            ${thirds.map((row, idx) => `<tr class="${idx < 8 ? "qualify" : "wait"}">
+              <td>${idx + 1}</td>
+              <td>${teamLabel(row.team)}</td>
+              <td>${row.group}</td>
+              <td>${row.played}</td>
+              <td>${row.gf}-${row.ga}</td>
+              <td><b>${row.pts}</b></td>
+              <td>${idx < 8 ? "проходит" : "резерв"}</td>
+            </tr>`).join("")}
+          </tbody>
+        </table>`;
     }
 
     function renderScorers() {
@@ -1862,12 +1971,7 @@
         if (rows[1]) firstSecond.push({ ...rows[1], label: `2${group}` });
         if (rows[2]) thirds.push({ ...rows[2], label: `3${group}` });
       });
-      thirds.sort((a, b) =>
-        b.pts - a.pts ||
-        b.gd - a.gd ||
-        b.gf - a.gf ||
-        a.team.localeCompare(b.team)
-      );
+      thirds.sort(compareRows);
       return { firstSecond, thirds, waiting, all: firstSecond.concat(thirds.slice(0, 8)) };
     }
 
@@ -2021,6 +2125,23 @@
         month: "2-digit",
         year: "numeric"
       }).format(new Date(Date.UTC(year, month - 1, day, 12)));
+    }
+
+    function localTime(match) {
+      return localDateTime(match, { timeOnly: true });
+    }
+
+    function localDateTime(match, options = {}) {
+      const zone = VENUE_TIME_ZONES[match.venue];
+      if (!zone) return "не указано";
+      const key = `${zone}|${options.timeOnly ? "time" : "date"}`;
+      localDtfCache[key] ||= new Intl.DateTimeFormat("ru-UA", {
+        timeZone: zone,
+        ...(options.timeOnly ? {} : { day: "2-digit", month: "2-digit" }),
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+      return localDtfCache[key].format(new Date(match.utc));
     }
 
     function teamLabel(team) {
