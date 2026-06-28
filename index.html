@@ -1003,7 +1003,8 @@
 
     @media (max-width: 520px) {
       .layout, .topbar-inner { padding-inline: 12px; }
-      body[data-tab="matches"] .layout,
+      body[data-tab="groupMatches"] .layout,
+      body[data-tab="playoffMatches"] .layout,
       body[data-tab="scorers"] .layout {
         padding-top: 12px;
       }
@@ -1043,21 +1044,22 @@
       <section class="today-panel" id="todayTomorrow"></section>
 
       <nav class="tabs" aria-label="Разделы">
-        <button class="tab active" data-tab="matches">Матчи</button>
+        <button class="tab active" data-tab="groupMatches">Матчи групп</button>
+        <button class="tab" data-tab="playoffMatches">Матчи плей-офф</button>
         <button class="tab" data-tab="groups">Группы</button>
         <button class="tab" data-tab="scorers">Бомбардиры</button>
         <button class="tab" data-tab="bracket">Сетка</button>
       </nav>
 
-      <section class="section active" id="matches">
+      <section class="section active" id="groupMatches">
         <div class="section-title">
           <div>
-            <h2>Календарь</h2>
-            <p>Время показано по Киеву. Счета сохраняются в этом браузере.</p>
+            <h2>Матчи группового этапа</h2>
+            <p>Группы A-L. Время показано по Киеву, счета сохраняются в этом браузере.</p>
           </div>
         </div>
         <div class="toolbar">
-          <input id="search" type="search" placeholder="Поиск команды или города">
+          <input id="search" type="search" placeholder="Поиск команды или города в группе">
           <select id="groupFilter" aria-label="Группа"></select>
           <select id="statusFilter" aria-label="Статус">
             <option value="all">Все матчи</option>
@@ -1066,6 +1068,24 @@
           </select>
         </div>
         <div id="matchList" class="match-list"></div>
+      </section>
+
+      <section class="section" id="playoffMatches">
+        <div class="section-title">
+          <div>
+            <h2>Матчи плей-офф</h2>
+            <p>1/16 финала и следующие раунды. Победители этих матчей переходят в сетку.</p>
+          </div>
+        </div>
+        <div class="toolbar">
+          <input id="playoffSearch" type="search" placeholder="Поиск команды в плей-офф">
+          <select id="playoffStatusFilter" aria-label="Статус плей-офф">
+            <option value="all">Все матчи</option>
+            <option value="upcoming">Будущие</option>
+            <option value="done">Завершенные</option>
+          </select>
+        </div>
+        <div id="playoffMatchList" class="match-list"></div>
       </section>
 
       <section class="section" id="groups">
@@ -2170,12 +2190,15 @@
         summary: document.querySelector("#summary"),
         todayTomorrow: document.querySelector("#todayTomorrow"),
         matchList: document.querySelector("#matchList"),
+        playoffMatchList: document.querySelector("#playoffMatchList"),
         groupsGrid: document.querySelector("#groupsGrid"),
         thirdRanking: document.querySelector("#thirdRanking"),
         scorersPanel: document.querySelector("#scorersPanel"),
         groupFilter: document.querySelector("#groupFilter"),
         statusFilter: document.querySelector("#statusFilter"),
         search: document.querySelector("#search"),
+        playoffStatusFilter: document.querySelector("#playoffStatusFilter"),
+        playoffSearch: document.querySelector("#playoffSearch"),
         qualified: document.querySelector("#qualified"),
         bracketOverview: document.querySelector("#bracketOverview"),
         pathMap: document.querySelector("#pathMap"),
@@ -2188,12 +2211,12 @@
       document.querySelectorAll(".tab").forEach(btn => {
         btn.addEventListener("click", () => switchTab(btn.dataset.tab));
       });
-      [els.groupFilter, els.statusFilter, els.search].forEach(el => el.addEventListener("input", render));
+      [els.groupFilter, els.statusFilter, els.search, els.playoffStatusFilter, els.playoffSearch].forEach(el => el.addEventListener("input", render));
       document.querySelector("#exportBtn").addEventListener("click", exportState);
       document.querySelector("#importBtn").addEventListener("click", () => document.querySelector("#importInput").click());
       document.querySelector("#importInput").addEventListener("change", importState);
       document.querySelector("#resetBtn").addEventListener("click", resetState);
-      document.body.dataset.tab = "matches";
+      document.body.dataset.tab = "groupMatches";
       render();
     }
 
@@ -2213,10 +2236,19 @@
       return r.status === "done" && Number.isInteger(r.home) && Number.isInteger(r.away);
     }
 
+    function isGroupMatch(match) {
+      return Boolean(GROUPS[match.group]);
+    }
+
+    function isPlayoffMatch(match) {
+      return !isGroupMatch(match);
+    }
+
     function render() {
       renderSummary();
       renderTodayTomorrow();
       renderMatches();
+      renderPlayoffMatches();
       renderGroups();
       renderScorers();
       renderBracket();
@@ -2225,7 +2257,9 @@
     function renderSummary() {
       const done = MATCHES.filter(isDone).length;
       const upcoming = MATCHES.length - done;
-      const next = MATCHES.find(match => !isDone(match));
+      const next = MATCHES
+        .filter(match => !isDone(match))
+        .sort((a, b) => new Date(a.utc) - new Date(b.utc))[0];
       const standings = getStandings();
       const completeGroups = Object.values(standings).filter(rows => rows.every(row => row.played === 3)).length;
       els.summary.innerHTML = [
@@ -2282,6 +2316,7 @@
       const group = els.groupFilter.value;
       const status = els.statusFilter.value;
       const filtered = MATCHES.filter(match => {
+        if (!isGroupMatch(match)) return false;
         const hay = `${match.home} ${match.away} ${match.venue}`.toLowerCase();
         if (group !== "all" && match.group !== group) return false;
         if (query && !hay.includes(query)) return false;
@@ -2291,10 +2326,30 @@
       });
 
       els.matchList.innerHTML = filtered.length ? filtered.map(matchCard).join("") : '<div class="empty">Ничего не найдено</div>';
-      els.matchList.querySelectorAll("[data-match-input]").forEach(input => {
+      bindMatchList(els.matchList);
+    }
+
+    function renderPlayoffMatches() {
+      const query = els.playoffSearch.value.trim().toLowerCase();
+      const status = els.playoffStatusFilter.value;
+      const filtered = MATCHES.filter(match => {
+        if (!isPlayoffMatch(match)) return false;
+        const hay = `${match.home} ${match.away} ${match.venue} ${match.group}`.toLowerCase();
+        if (query && !hay.includes(query)) return false;
+        if (status === "done" && !isDone(match)) return false;
+        if (status === "upcoming" && isDone(match)) return false;
+        return true;
+      });
+
+      els.playoffMatchList.innerHTML = filtered.length ? filtered.map(matchCard).join("") : '<div class="empty">Матчей плей-офф пока нет</div>';
+      bindMatchList(els.playoffMatchList);
+    }
+
+    function bindMatchList(root) {
+      root.querySelectorAll("[data-match-input]").forEach(input => {
         input.addEventListener("input", handleScoreInput);
       });
-      els.matchList.querySelectorAll("[data-match-status]").forEach(select => {
+      root.querySelectorAll("[data-match-status]").forEach(select => {
         select.addEventListener("change", handleStatus);
       });
     }
