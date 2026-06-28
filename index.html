@@ -1082,7 +1082,23 @@
       m("G69","K","2026-06-27T23:30:00Z","Colombia","Portugal","Miami Stadium"),
       m("G70","K","2026-06-27T23:30:00Z","DR Congo","Uzbekistan","Atlanta Stadium"),
       m("G71","J","2026-06-28T02:00:00Z","Algeria","Austria","Kansas City Stadium"),
-      m("G72","J","2026-06-28T02:00:00Z","Jordan","Argentina","Dallas Stadium")
+      m("G72","J","2026-06-28T02:00:00Z","Jordan","Argentina","Dallas Stadium"),
+      m("K73","1/16 финала","2026-06-28T19:00:00Z","South Africa","Canada","Стадион уточняется"),
+      m("K74","1/16 финала","2026-06-29T17:00:00Z","Brazil","Japan","Стадион уточняется"),
+      m("K75","1/16 финала","2026-06-29T20:30:00Z","Germany","Paraguay","Стадион уточняется"),
+      m("K76","1/16 финала","2026-06-30T01:00:00Z","Netherlands","Morocco","Стадион уточняется"),
+      m("K77","1/16 финала","2026-06-30T17:00:00Z","Ivory Coast","Norway","Стадион уточняется"),
+      m("K78","1/16 финала","2026-06-30T21:00:00Z","France","Sweden","Стадион уточняется"),
+      m("K79","1/16 финала","2026-07-01T01:00:00Z","Mexico","Ecuador","Стадион уточняется"),
+      m("K80","1/16 финала","2026-07-01T16:00:00Z","England","DR Congo","Стадион уточняется"),
+      m("K81","1/16 финала","2026-07-01T20:00:00Z","Belgium","Senegal","Стадион уточняется"),
+      m("K82","1/16 финала","2026-07-02T00:00:00Z","United States","Bosnia and Herzegovina","Стадион уточняется"),
+      m("K83","1/16 финала","2026-07-02T19:00:00Z","Spain","Austria","Стадион уточняется"),
+      m("K84","1/16 финала","2026-07-02T23:00:00Z","Portugal","Croatia","Стадион уточняется"),
+      m("K85","1/16 финала","2026-07-03T03:00:00Z","Switzerland","Algeria","Стадион уточняется"),
+      m("K86","1/16 финала","2026-07-03T18:00:00Z","Australia","Egypt","Стадион уточняется"),
+      m("K87","1/16 финала","2026-07-03T22:00:00Z","Argentina","Cabo Verde","Стадион уточняется"),
+      m("K88","1/16 финала","2026-07-04T01:30:00Z","Colombia","Ghana","Стадион уточняется")
     ];
 
     const OFFICIAL_RESULTS = {
@@ -1899,26 +1915,23 @@
     ];
 
 
-    // Официальные слоты FIFA для 1/16 финала.
-    // Расставляются только победители и вторые места завершённых групп.
-    // Слоты для лучших третьих мест оставлены пустыми до официального определения.
     const ROUND_OF_32_SLOTS = [
-      { match: 73, a: "2A", b: "2B" },
-      { match: 75, a: "1F", b: "2C" },
-      { match: 74, a: "1E", b: "3A/B/C/D/F" },
-      { match: 77, a: "1I", b: "3C/D/F/G/H" },
-      { match: 83, a: "2K", b: "2L" },
-      { match: 84, a: "1H", b: "2J" },
-      { match: 81, a: "1D", b: "3B/E/F/I/J" },
-      { match: 82, a: "1G", b: "3A/E/H/I/J" },
-      { match: 76, a: "1C", b: "2F" },
-      { match: 78, a: "2E", b: "2I" },
-      { match: 79, a: "1A", b: "3C/E/F/H/I" },
-      { match: 80, a: "1L", b: "3E/H/I/J/K" },
-      { match: 86, a: "1J", b: "2H" },
-      { match: 88, a: "2D", b: "2G" },
-      { match: 85, a: "1B", b: "3E/F/G/I/J" },
-      { match: 87, a: "1K", b: "3D/E/I/J/L" }
+      { label: "28.06 22:00", a: "South Africa", b: "Canada" },
+      { label: "30.06 04:00", a: "Netherlands", b: "Morocco" },
+      { label: "29.06 23:30", a: "Germany", b: "Paraguay" },
+      { label: "01.07 00:00", a: "France", b: "Sweden" },
+      { label: "29.06 20:00", a: "Brazil", b: "Japan" },
+      { label: "30.06 20:00", a: "Ivory Coast", b: "Norway" },
+      { label: "01.07 04:00", a: "Mexico", b: "Ecuador" },
+      { label: "01.07 19:00", a: "England", b: "DR Congo" },
+      { label: "03.07 02:00", a: "Portugal", b: "Croatia" },
+      { label: "02.07 22:00", a: "Spain", b: "Austria" },
+      { label: "02.07 03:00", a: "United States", b: "Bosnia and Herzegovina" },
+      { label: "01.07 23:00", a: "Belgium", b: "Senegal" },
+      { label: "04.07 01:00", a: "Argentina", b: "Cabo Verde" },
+      { label: "03.07 21:00", a: "Australia", b: "Egypt" },
+      { label: "03.07 06:00", a: "Switzerland", b: "Algeria" },
+      { label: "04.07 04:30", a: "Colombia", b: "Ghana" }
     ];
 
     const state = loadState();
@@ -2050,7 +2063,7 @@
       const completeGroups = Object.values(standings).filter(rows => rows.every(row => row.played === 3)).length;
       els.summary.innerHTML = [
         stat(done, "завершено матчей"),
-        stat(upcoming, "осталось в группе"),
+        stat(upcoming, "осталось матчей"),
         stat(`${completeGroups}/12`, "готово групп"),
         stat(next ? `${next.home} - ${next.away}` : "Плей-офф", next ? `следующий: ${formatDate(next.utc)}` : "групповой этап заполнен")
       ].join("");
@@ -2088,7 +2101,7 @@
       const status = isDone(match) ? "Завершен" : result.status === "live" ? "Идет" : "Скоро";
       return `<div class="mini-match">
         <strong>${escapeHtml(score)}</strong>
-        <span>${teamLabel(match.home)} - ${teamLabel(match.away)}<br><small>Группа ${match.group} · ${escapeHtml(match.venue)} · местное ${localTime(match)}</small></span>
+        <span>${teamLabel(match.home)} - ${teamLabel(match.away)}<br><small>${escapeHtml(stageLabel(match))} · ${escapeHtml(match.venue)} · местное ${localTime(match)}</small></span>
         <span class="pill ${isDone(match) ? "done" : result.status === "live" ? "live" : ""}">${status}</span>
       </div>`;
     }
@@ -2127,7 +2140,7 @@
       const review = done ? reviewLink(match) : "";
       return `<article class="match">
         <div class="match-head">
-          <span>Группа ${match.group} · ${formatDate(match.utc)}</span>
+          <span>${escapeHtml(stageLabel(match))} · ${formatDate(match.utc)}</span>
           <span class="pill ${done ? "done" : status === "live" ? "live" : ""}">${statusLabel(status, done)}</span>
         </div>
         <div class="teams">
@@ -2193,6 +2206,10 @@
       return "Скоро";
     }
 
+    function stageLabel(match) {
+      return GROUPS[match.group] ? `Группа ${match.group}` : match.group;
+    }
+
     function handleScoreInput(event) {
       const id = event.target.dataset.matchInput;
       const side = event.target.dataset.side;
@@ -2224,6 +2241,7 @@
       }
       const byTeam = Object.fromEntries(Object.values(groups).flat().map(row => [row.team, row]));
       MATCHES.forEach(match => {
+        if (!GROUPS[match.group]) return;
         if (!isDone(match)) return;
         const r = getResult(match.id);
         const home = byTeam[match.home];
@@ -2420,8 +2438,10 @@
     }
 
     function resolveSeed(seed) {
-      if (!seed || seed.startsWith("3")) return "";
-      return getSeedMap()[seed] || "";
+      if (!seed) return "";
+      if (/^[12][A-L]$/.test(seed)) return getSeedMap()[seed] || "";
+      if (seed.startsWith("3")) return "";
+      return seed;
     }
 
     function roundOf32TieTeams(tieIndex) {
@@ -2431,7 +2451,8 @@
         b: resolveSeed(slot.b),
         aLabel: seedLabel(slot.a),
         bLabel: seedLabel(slot.b),
-        match: slot.match
+        match: slot.match,
+        label: slot.label
       };
     }
 
@@ -2450,8 +2471,8 @@
       const q = getQualified();
       els.qualified.innerHTML = [
         qualBox("1-2 места", q.firstSecond.map(item => `${item.label}: ${item.team}`)),
-        qualBox("Лучшие третьи", []),
-        qualBox("На грани", []),
+        qualBox("Лучшие третьи", q.thirds.slice(0, 8).map(item => `${item.label}: ${item.team}`)),
+        qualBox("Вылетели с 3 места", q.thirds.slice(8).map(item => `${item.label}: ${item.team}`)),
         qualBox("Ждут завершения", q.waiting)
       ].join("");
 
@@ -2476,7 +2497,7 @@
       const seeded = tieTeams(roundIndex, tieIndex);
       const a = seeded.a || tie.a || "";
       const b = seeded.b || tie.b || "";
-      const matchLabel = roundIndex === 0 && seeded.match ? `<div class="meta-line">Матч ${seeded.match}</div>` : "";
+      const matchLabel = roundIndex === 0 && (seeded.label || seeded.match) ? `<div class="meta-line">${escapeHtml(seeded.label || `Матч ${seeded.match}`)}</div>` : "";
       return `<div class="tie">
         ${matchLabel}
         ${selectTeam(id, "a", a, a ? [a] : [], seeded.aLabel)}
