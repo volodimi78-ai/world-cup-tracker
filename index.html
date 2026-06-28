@@ -687,6 +687,41 @@
       margin-bottom: 14px;
     }
 
+    .bracket-overview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 10px;
+      margin: 0 0 14px;
+    }
+
+    .overview-card {
+      display: grid;
+      gap: 8px;
+      padding: 10px 12px;
+      border: 1px solid rgba(14, 33, 25, .14);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .55);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 8px 20px rgba(14, 33, 25, .07);
+    }
+
+    .overview-card strong {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .overview-teams {
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .overview-next {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
     .qual-box {
       background: rgba(255, 255, 255, .72);
       border: 1px solid var(--line);
@@ -1027,7 +1062,8 @@
             <p>После групп выбери участников в слотах. Победители матчей переходят дальше автоматически.</p>
           </div>
         </div>
-        <div class="notice">В ЧМ-2026 первые две команды и восемь лучших третьих мест попадают в раунд 1/16 финала, а конкретные пары зависят от комбинации групп. Поэтому приложение считает кандидатов, но не придумывает пары вместо официальной сетки.</div>
+        <div class="notice">Официальная сетка 1/16 финала внесена по опубликованному расписанию. Победители автоматически переходят в следующую ветку после ввода счета.</div>
+        <div id="bracketOverview" class="bracket-overview"></div>
         <div id="qualified" class="qualified"></div>
         <div class="bracket">
           <div id="bracketInner" class="bracket-inner"></div>
@@ -2106,6 +2142,7 @@
         statusFilter: document.querySelector("#statusFilter"),
         search: document.querySelector("#search"),
         qualified: document.querySelector("#qualified"),
+        bracketOverview: document.querySelector("#bracketOverview"),
         bracketInner: document.querySelector("#bracketInner")
       });
 
@@ -2563,6 +2600,7 @@
 
     function renderBracket() {
       const q = getQualified();
+      renderBracketOverview();
       els.qualified.innerHTML = [
         qualBox("1-2 места", q.firstSecond.map(item => `${item.label}: ${item.team}`)),
         qualBox("Лучшие третьи", q.thirds.slice(0, 8).map(item => `${item.label}: ${item.team}`)),
@@ -2579,6 +2617,17 @@
       els.bracketInner.querySelectorAll("select,input").forEach(el => {
         el.addEventListener("input", handleBracketInput);
       });
+    }
+
+    function renderBracketOverview() {
+      els.bracketOverview.innerHTML = ROUND_OF_32_SLOTS.map((slot, index) => {
+        const nextRound = pathLabel(0, index).replace("Победитель → ", "");
+        return `<article class="overview-card">
+          <strong>Пара ${index + 1} · ${escapeHtml(slot.label || "")}</strong>
+          <div class="overview-teams">${teamLabel(slot.a)} — ${teamLabel(slot.b)}</div>
+          <div class="overview-next">Победитель → ${escapeHtml(nextRound)}</div>
+        </article>`;
+      }).join("");
     }
 
     function qualBox(title, items) {
