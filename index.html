@@ -722,6 +722,36 @@
       font-size: 12px;
     }
 
+    .path-map {
+      display: grid;
+      gap: 8px;
+      margin: 0 0 14px;
+      padding: 12px;
+      border: 1px solid rgba(14, 33, 25, .14);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .48);
+      backdrop-filter: blur(6px);
+    }
+
+    .path-map h3 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .path-map-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 8px;
+    }
+
+    .path-line {
+      padding: 8px 10px;
+      border-radius: 7px;
+      background: rgba(255, 255, 255, .5);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
     .qual-box {
       background: rgba(255, 255, 255, .72);
       border: 1px solid var(--line);
@@ -1064,6 +1094,7 @@
         </div>
         <div class="notice">Официальная сетка 1/16 финала внесена по опубликованному расписанию. Победители автоматически переходят в следующую ветку после ввода счета.</div>
         <div id="bracketOverview" class="bracket-overview"></div>
+        <div id="pathMap" class="path-map"></div>
         <div id="qualified" class="qualified"></div>
         <div class="bracket">
           <div id="bracketInner" class="bracket-inner"></div>
@@ -2143,6 +2174,7 @@
         search: document.querySelector("#search"),
         qualified: document.querySelector("#qualified"),
         bracketOverview: document.querySelector("#bracketOverview"),
+        pathMap: document.querySelector("#pathMap"),
         bracketInner: document.querySelector("#bracketInner")
       });
 
@@ -2593,8 +2625,8 @@
       return {
         a: previousWinner(roundIndex, tieIndex * 2) || tie.a || "",
         b: previousWinner(roundIndex, tieIndex * 2 + 1) || tie.b || "",
-        aLabel: "Победитель предыдущего матча",
-        bLabel: "Победитель предыдущего матча"
+        aLabel: sourceLabel(roundIndex, tieIndex, 0),
+        bLabel: sourceLabel(roundIndex, tieIndex, 1)
       };
     }
 
@@ -2628,6 +2660,10 @@
           <div class="overview-next">Победитель → ${escapeHtml(nextRound)}</div>
         </article>`;
       }).join("");
+      els.pathMap.innerHTML = `<h3>Как складывается путь дальше</h3>
+        <div class="path-map-grid">
+          ${pathMapLines().map(line => `<div class="path-line">${escapeHtml(line)}</div>`).join("")}
+        </div>`;
     }
 
     function qualBox(title, items) {
@@ -2650,8 +2686,8 @@
         ${hiddenTeamSelect(id, "a", a)}
         ${hiddenTeamSelect(id, "b", b)}
         <div class="tie-teams">
-          ${teamSlot(id, "a", "sa", a, seeded.aLabel, scoreValue(tie.sa), winner === "a")}
-          ${teamSlot(id, "b", "sb", b, seeded.bLabel, scoreValue(tie.sb), winner === "b")}
+          ${teamSlot(id, "a", "sa", a, seeded.aLabel, scoreValue(tie.sa), winner === "a", roundIndex, tieIndex)}
+          ${teamSlot(id, "b", "sb", b, seeded.bLabel, scoreValue(tie.sb), winner === "b", roundIndex, tieIndex)}
         </div>
         <div class="tie-path">${escapeHtml(pathLabel(roundIndex, tieIndex))}</div>
       </div>`;
@@ -2664,7 +2700,7 @@
       </select>`;
     }
 
-    function teamSlot(id, side, scoreField, team, placeholder, score, winner) {
+    function teamSlot(id, side, scoreField, team, placeholder, score, winner, roundIndex, tieIndex) {
       const text = team ? `${FLAGS[team] ? FLAGS[team] + " " : ""}${team}` : placeholder;
       return `<div class="tie-team ${team ? "" : "pending"} ${winner ? "winner" : ""}">
         <span class="tie-team-name">${escapeHtml(text)}</span>
@@ -2688,6 +2724,35 @@
         4: ["19.07 22:00"]
       };
       return labels[roundIndex]?.[tieIndex] || "";
+    }
+
+    function pathMapLines() {
+      return [
+        "1/8: победитель пары 1 - победитель пары 2",
+        "1/8: победитель пары 3 - победитель пары 4",
+        "1/8: победитель пары 5 - победитель пары 6",
+        "1/8: победитель пары 7 - победитель пары 8",
+        "1/8: победитель пары 9 - победитель пары 10",
+        "1/8: победитель пары 11 - победитель пары 12",
+        "1/8: победитель пары 13 - победитель пары 14",
+        "1/8: победитель пары 15 - победитель пары 16",
+        "1/4: победитель 1/8 матча 1 - победитель 1/8 матча 2",
+        "1/4: победитель 1/8 матча 3 - победитель 1/8 матча 4",
+        "1/4: победитель 1/8 матча 5 - победитель 1/8 матча 6",
+        "1/4: победитель 1/8 матча 7 - победитель 1/8 матча 8",
+        "1/2: победитель 1/4 матча 1 - победитель 1/4 матча 2",
+        "1/2: победитель 1/4 матча 3 - победитель 1/4 матча 4",
+        "Финал: победитель 1/2 матча 1 - победитель 1/2 матча 2"
+      ];
+    }
+
+    function sourceLabel(roundIndex, tieIndex, sideIndex) {
+      if (roundIndex === 0) return "";
+      const sourceTie = tieIndex * 2 + sideIndex;
+      if (roundIndex === 1) return `Победитель пары ${sourceTie + 1}`;
+      if (roundIndex === 2) return `Победитель 1/8, матч ${sourceTie + 1}`;
+      if (roundIndex === 3) return `Победитель 1/4, матч ${sourceTie + 1}`;
+      return `Победитель 1/2, матч ${sourceTie + 1}`;
     }
 
     function pathLabel(roundIndex, tieIndex) {
