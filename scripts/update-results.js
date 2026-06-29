@@ -93,6 +93,7 @@ const PLAYER_MAP = {
   "Джаст": "Elijah Just",
   "Диарра Х.": "Habib Diarra",
   "Дуэ Д.": "Desire Doue",
+  "Эуштакиу": "Stephen Eustaquio",
   "Винисиус Жуниор": "Vinicius Junior",
   "Висса Й.": "Yoane Wissa",
   "Влашич": "Nikola Vlasic",
