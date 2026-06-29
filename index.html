@@ -29,7 +29,8 @@
       letter-spacing: 0;
     }
 
-    body[data-tab="matches"] {
+    body[data-tab="groupMatches"],
+    body[data-tab="playoffMatches"] {
       --page-image: url("assets/worldcup-2026-hero.webp");
     }
 
@@ -180,15 +181,20 @@
       padding: 18px;
     }
 
-    body[data-tab="matches"] .layout,
+    body[data-tab="groupMatches"] .layout,
+    body[data-tab="playoffMatches"] .layout,
     body[data-tab="scorers"] .layout {
       padding-top: 18px;
     }
 
-    body[data-tab="matches"] .summary,
-    body[data-tab="matches"] .today-panel,
-    body[data-tab="matches"] .tabs,
-    body[data-tab="matches"] .section.active,
+    body[data-tab="groupMatches"] .summary,
+    body[data-tab="groupMatches"] .today-panel,
+    body[data-tab="groupMatches"] .tabs,
+    body[data-tab="groupMatches"] .section.active,
+    body[data-tab="playoffMatches"] .summary,
+    body[data-tab="playoffMatches"] .today-panel,
+    body[data-tab="playoffMatches"] .tabs,
+    body[data-tab="playoffMatches"] .section.active,
     body[data-tab="scorers"] .summary,
     body[data-tab="scorers"] .today-panel,
     body[data-tab="scorers"] .tabs,
@@ -1268,22 +1274,22 @@
       m("G70","K","2026-06-27T23:30:00Z","DR Congo","Uzbekistan","Atlanta Stadium"),
       m("G71","J","2026-06-28T02:00:00Z","Algeria","Austria","Kansas City Stadium"),
       m("G72","J","2026-06-28T02:00:00Z","Jordan","Argentina","Dallas Stadium"),
-      m("K73","1/16 финала","2026-06-28T19:00:00Z","South Africa","Canada","Стадион уточняется"),
-      m("K74","1/16 финала","2026-06-29T17:00:00Z","Brazil","Japan","Стадион уточняется"),
-      m("K75","1/16 финала","2026-06-29T20:30:00Z","Germany","Paraguay","Стадион уточняется"),
-      m("K76","1/16 финала","2026-06-30T01:00:00Z","Netherlands","Morocco","Стадион уточняется"),
-      m("K77","1/16 финала","2026-06-30T17:00:00Z","Ivory Coast","Norway","Стадион уточняется"),
-      m("K78","1/16 финала","2026-06-30T21:00:00Z","France","Sweden","Стадион уточняется"),
-      m("K79","1/16 финала","2026-07-01T01:00:00Z","Mexico","Ecuador","Стадион уточняется"),
-      m("K80","1/16 финала","2026-07-01T16:00:00Z","England","DR Congo","Стадион уточняется"),
-      m("K81","1/16 финала","2026-07-01T20:00:00Z","Belgium","Senegal","Стадион уточняется"),
-      m("K82","1/16 финала","2026-07-02T00:00:00Z","United States","Bosnia and Herzegovina","Стадион уточняется"),
-      m("K83","1/16 финала","2026-07-02T19:00:00Z","Spain","Austria","Стадион уточняется"),
-      m("K84","1/16 финала","2026-07-02T23:00:00Z","Portugal","Croatia","Стадион уточняется"),
-      m("K85","1/16 финала","2026-07-03T03:00:00Z","Switzerland","Algeria","Стадион уточняется"),
-      m("K86","1/16 финала","2026-07-03T18:00:00Z","Australia","Egypt","Стадион уточняется"),
-      m("K87","1/16 финала","2026-07-03T22:00:00Z","Argentina","Cabo Verde","Стадион уточняется"),
-      m("K88","1/16 финала","2026-07-04T01:30:00Z","Colombia","Ghana","Стадион уточняется")
+      m("K73","1/16 финала","2026-06-28T19:00:00Z","South Africa","Canada","SoFi Stadium"),
+      m("K74","1/16 финала","2026-06-29T17:00:00Z","Brazil","Japan","Houston Stadium"),
+      m("K75","1/16 финала","2026-06-29T20:30:00Z","Germany","Paraguay","Boston Stadium"),
+      m("K76","1/16 финала","2026-06-30T01:00:00Z","Netherlands","Morocco","Estadio Monterrey"),
+      m("K77","1/16 финала","2026-06-30T17:00:00Z","Ivory Coast","Norway","Dallas Stadium"),
+      m("K78","1/16 финала","2026-06-30T21:00:00Z","France","Sweden","New York New Jersey Stadium"),
+      m("K79","1/16 финала","2026-07-01T01:00:00Z","Mexico","Ecuador","Mexico City Stadium"),
+      m("K80","1/16 финала","2026-07-01T16:00:00Z","England","DR Congo","Atlanta Stadium"),
+      m("K81","1/16 финала","2026-07-01T20:00:00Z","Belgium","Senegal","Seattle Stadium"),
+      m("K82","1/16 финала","2026-07-02T00:00:00Z","United States","Bosnia and Herzegovina","San Francisco Bay Stadium"),
+      m("K83","1/16 финала","2026-07-02T19:00:00Z","Spain","Austria","Los Angeles Stadium"),
+      m("K84","1/16 финала","2026-07-02T23:00:00Z","Portugal","Croatia","Toronto Stadium"),
+      m("K85","1/16 финала","2026-07-03T03:00:00Z","Switzerland","Algeria","BC Place Vancouver"),
+      m("K86","1/16 финала","2026-07-03T18:00:00Z","Australia","Egypt","Dallas Stadium"),
+      m("K87","1/16 финала","2026-07-03T22:00:00Z","Argentina","Cabo Verde","Miami Stadium"),
+      m("K88","1/16 финала","2026-07-04T01:30:00Z","Colombia","Ghana","Kansas City Stadium")
     ];
 
     const OFFICIAL_RESULTS = {
@@ -2110,22 +2116,22 @@
 
 
     const ROUND_OF_32_SLOTS = [
-      { label: "28.06 22:00", a: "South Africa", b: "Canada" },
-      { label: "30.06 04:00", a: "Netherlands", b: "Morocco" },
-      { label: "29.06 23:30", a: "Germany", b: "Paraguay" },
-      { label: "01.07 00:00", a: "France", b: "Sweden" },
-      { label: "29.06 20:00", a: "Brazil", b: "Japan" },
-      { label: "30.06 20:00", a: "Ivory Coast", b: "Norway" },
-      { label: "01.07 04:00", a: "Mexico", b: "Ecuador" },
-      { label: "01.07 19:00", a: "England", b: "DR Congo" },
-      { label: "03.07 02:00", a: "Portugal", b: "Croatia" },
-      { label: "02.07 22:00", a: "Spain", b: "Austria" },
-      { label: "02.07 03:00", a: "United States", b: "Bosnia and Herzegovina" },
-      { label: "01.07 23:00", a: "Belgium", b: "Senegal" },
-      { label: "04.07 01:00", a: "Argentina", b: "Cabo Verde" },
-      { label: "03.07 21:00", a: "Australia", b: "Egypt" },
-      { label: "03.07 06:00", a: "Switzerland", b: "Algeria" },
-      { label: "04.07 04:30", a: "Colombia", b: "Ghana" }
+      { match: "K73", label: "28.06 22:00", a: "South Africa", b: "Canada" },
+      { match: "K76", label: "30.06 04:00", a: "Netherlands", b: "Morocco" },
+      { match: "K75", label: "29.06 23:30", a: "Germany", b: "Paraguay" },
+      { match: "K78", label: "01.07 00:00", a: "France", b: "Sweden" },
+      { match: "K74", label: "29.06 20:00", a: "Brazil", b: "Japan" },
+      { match: "K77", label: "30.06 20:00", a: "Ivory Coast", b: "Norway" },
+      { match: "K79", label: "01.07 04:00", a: "Mexico", b: "Ecuador" },
+      { match: "K80", label: "01.07 19:00", a: "England", b: "DR Congo" },
+      { match: "K84", label: "03.07 02:00", a: "Portugal", b: "Croatia" },
+      { match: "K83", label: "02.07 22:00", a: "Spain", b: "Austria" },
+      { match: "K82", label: "02.07 03:00", a: "United States", b: "Bosnia and Herzegovina" },
+      { match: "K81", label: "01.07 23:00", a: "Belgium", b: "Senegal" },
+      { match: "K87", label: "04.07 01:00", a: "Argentina", b: "Cabo Verde" },
+      { match: "K86", label: "03.07 21:00", a: "Australia", b: "Egypt" },
+      { match: "K85", label: "03.07 06:00", a: "Switzerland", b: "Algeria" },
+      { match: "K88", label: "04.07 04:30", a: "Colombia", b: "Ghana" }
     ];
 
     const state = loadState();
@@ -2152,8 +2158,10 @@
       "Houston Stadium": "America/Chicago",
       "Kansas City Stadium": "America/Chicago",
       "Dallas Stadium": "America/Chicago",
+      "SoFi Stadium": "America/Los_Angeles",
       "Los Angeles Stadium": "America/Los_Angeles",
       "San Francisco Bay Area Stadium": "America/Los_Angeles",
+      "San Francisco Bay Stadium": "America/Los_Angeles",
       "Seattle Stadium": "America/Los_Angeles",
       "BC Place Vancouver": "America/Vancouver"
     };
@@ -2745,7 +2753,10 @@
       const a = seeded.a || tie.a || "";
       const b = seeded.b || tie.b || "";
       const matchLabel = roundIndex === 0 && (seeded.label || seeded.match) ? (seeded.label || `Матч ${seeded.match}`) : roundDateLabel(roundIndex, tieIndex);
-      const winner = Number.isInteger(tie.sa) && Number.isInteger(tie.sb) && tie.sa !== tie.sb ? (tie.sa > tie.sb ? "a" : "b") : "";
+      const officialScore = officialTieScore(roundIndex, tieIndex);
+      const scoreA = officialScore?.sa ?? tie.sa;
+      const scoreB = officialScore?.sb ?? tie.sb;
+      const winner = Number.isInteger(scoreA) && Number.isInteger(scoreB) && scoreA !== scoreB ? (scoreA > scoreB ? "a" : "b") : "";
       return `<div class="tie">
         <div class="tie-meta">
           <span>${escapeHtml(roundLabel(roundIndex, tieIndex))}</span>
@@ -2754,8 +2765,8 @@
         ${hiddenTeamSelect(id, "a", a)}
         ${hiddenTeamSelect(id, "b", b)}
         <div class="tie-teams">
-          ${teamSlot(id, "a", "sa", a, seeded.aLabel, scoreValue(tie.sa), winner === "a", roundIndex, tieIndex)}
-          ${teamSlot(id, "b", "sb", b, seeded.bLabel, scoreValue(tie.sb), winner === "b", roundIndex, tieIndex)}
+          ${teamSlot(id, "a", "sa", a, seeded.aLabel, scoreValue(scoreA), winner === "a", roundIndex, tieIndex, Boolean(officialScore))}
+          ${teamSlot(id, "b", "sb", b, seeded.bLabel, scoreValue(scoreB), winner === "b", roundIndex, tieIndex, Boolean(officialScore))}
         </div>
         <div class="tie-path">${escapeHtml(pathLabel(roundIndex, tieIndex))}</div>
       </div>`;
@@ -2768,11 +2779,11 @@
       </select>`;
     }
 
-    function teamSlot(id, side, scoreField, team, placeholder, score, winner, roundIndex, tieIndex) {
+    function teamSlot(id, side, scoreField, team, placeholder, score, winner, roundIndex, tieIndex, locked = false) {
       const text = team ? `${FLAGS[team] ? FLAGS[team] + " " : ""}${team}` : placeholder;
       return `<div class="tie-team ${team ? "" : "pending"} ${winner ? "winner" : ""}">
         <span class="tie-team-name">${escapeHtml(text)}</span>
-        <input class="tie-score" data-bracket="${id}" data-field="${scoreField}" type="number" min="0" max="30" value="${score}" aria-label="Счет ${side === "a" ? "1" : "2"}">
+        <input class="tie-score" data-bracket="${id}" data-field="${scoreField}" type="number" min="0" max="30" value="${score}" aria-label="Счет ${side === "a" ? "1" : "2"}" ${locked ? "disabled" : ""}>
       </div>`;
     }
 
@@ -2833,12 +2844,24 @@
     function previousWinner(roundIndex, previousTieIndex) {
       if (roundIndex === 0) return "";
       const priorRound = roundIndex - 1;
+      const officialScore = officialTieScore(priorRound, previousTieIndex);
       const prev = state.bracket[`R${priorRound}-${previousTieIndex}`] || {};
       const teams = tieTeams(priorRound, previousTieIndex);
       const a = teams.a || prev.a || "";
       const b = teams.b || prev.b || "";
-      if (!a || !b || !Number.isInteger(prev.sa) || !Number.isInteger(prev.sb) || prev.sa === prev.sb) return "";
-      return prev.sa > prev.sb ? a : b;
+      const scoreA = officialScore?.sa ?? prev.sa;
+      const scoreB = officialScore?.sb ?? prev.sb;
+      if (!a || !b || !Number.isInteger(scoreA) || !Number.isInteger(scoreB) || scoreA === scoreB) return "";
+      return scoreA > scoreB ? a : b;
+    }
+
+    function officialTieScore(roundIndex, tieIndex) {
+      if (roundIndex !== 0) return null;
+      const matchId = ROUND_OF_32_SLOTS[tieIndex]?.match;
+      const result = matchId ? getResult(matchId) : null;
+      if (!result || result.status !== "done") return null;
+      if (!Number.isInteger(result.home) || !Number.isInteger(result.away) || result.home === result.away) return null;
+      return { sa: result.home, sb: result.away };
     }
 
     function handleBracketInput(event) {
