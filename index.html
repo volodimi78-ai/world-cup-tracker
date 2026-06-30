@@ -2104,11 +2104,33 @@
         home: 2,
         away: 1,
         status: "done",
-        source: "Terrikon, 2026-06-29",
+        source: "Terrikon, 2026-06-30",
         goals: [
-          { team: "Brazil", scorer: "Каземиро", minute: 56 },
-          { team: "Brazil", scorer: "Мартинелли", minute: 96 },
-          { team: "Japan", scorer: "Сано", minute: 29 }
+          { team: "Brazil", scorer: "Casemiro", minute: 56 },
+          { team: "Brazil", scorer: "Gabriel Martinelli", minute: 96 },
+          { team: "Japan", scorer: "Kaishu Sano", minute: 29 }
+        ]
+      },
+      K75: {
+        home: 1,
+        away: 1,
+        status: "done",
+        source: "Terrikon / The Guardian, 2026-06-30",
+        penalties: { home: 3, away: 4 },
+        goals: [
+          { team: "Paraguay", scorer: "Julio Enciso", minute: 42 },
+          { team: "Germany", scorer: "Kai Havertz", minute: 54 }
+        ]
+      },
+      K76: {
+        home: 1,
+        away: 1,
+        status: "done",
+        source: "Terrikon / The Guardian, 2026-06-30",
+        penalties: { home: 2, away: 3 },
+        goals: [
+          { team: "Netherlands", scorer: "Cody Gakpo", minute: 72 },
+          { team: "Morocco", scorer: "Issa Diop", minute: 91 }
         ]
       }
     };
@@ -2326,7 +2348,7 @@
 
     function miniMatch(match) {
       const result = getResult(match.id);
-      const score = isDone(match) ? `${result.home}:${result.away}` : timeOnly(match.utc);
+      const score = isDone(match) ? displayScore(result) : timeOnly(match.utc);
       const status = isDone(match) ? "Завершен" : result.status === "live" ? "Идет" : "Скоро";
       return `<div class="mini-match">
         <strong>${escapeHtml(score)}</strong>
@@ -2388,6 +2410,9 @@
       const status = r.status || "upcoming";
       const goals = goalTooltip(match, r);
       const review = done ? reviewLink(match) : "";
+      const penaltyLine = done && Number.isInteger(r.penalties?.home) && Number.isInteger(r.penalties?.away)
+        ? `<div class="meta-line">Пенальти: ${r.penalties.home}:${r.penalties.away}</div>`
+        : "";
       return `<article class="match">
         <div class="match-head">
           <span>${escapeHtml(stageLabel(match))} · ${formatDate(match.utc)}</span>
@@ -2406,7 +2431,7 @@
           <span class="away">${teamLabel(match.away)}</span>
         </div>
         <div class="status-row">
-          <div><div class="venue">${escapeHtml(match.venue)}</div><div class="meta-line">Местное время: ${localDateTime(match)}</div></div>
+          <div><div class="venue">${escapeHtml(match.venue)}</div><div class="meta-line">Местное время: ${localDateTime(match)}</div>${penaltyLine}</div>
           ${review}
           <select data-match-status="${match.id}" aria-label="Статус матча">
             ${option("upcoming", "Скоро", status)}
@@ -2871,8 +2896,21 @@
       const matchId = ROUND_OF_32_SLOTS[tieIndex]?.match;
       const result = matchId ? getResult(matchId) : null;
       if (!result || result.status !== "done") return null;
-      if (!Number.isInteger(result.home) || !Number.isInteger(result.away) || result.home === result.away) return null;
+      if (!Number.isInteger(result.home) || !Number.isInteger(result.away)) return null;
+      if (result.home !== result.away) return { sa: result.home, sb: result.away };
+      if (Number.isInteger(result.penalties?.home) && Number.isInteger(result.penalties?.away) && result.penalties.home !== result.penalties.away) {
+        return { sa: result.penalties.home, sb: result.penalties.away };
+      }
       return { sa: result.home, sb: result.away };
+    }
+
+    function displayScore(result) {
+      if (!Number.isInteger(result.home) || !Number.isInteger(result.away)) return "";
+      const base = `${result.home}:${result.away}`;
+      if (Number.isInteger(result.penalties?.home) && Number.isInteger(result.penalties?.away)) {
+        return `${base} пен. ${result.penalties.home}:${result.penalties.away}`;
+      }
+      return base;
     }
 
     function handleBracketInput(event) {
