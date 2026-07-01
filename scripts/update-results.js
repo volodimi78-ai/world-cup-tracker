@@ -355,7 +355,8 @@ function formatResults(results) {
         away: ${result.away},
         status: ${formatValue(result.status || "done")},
         source: ${formatValue(result.source || "Terrikon")},
-        goals: [
+${result.penalties ? `        penalties: { home: ${result.penalties.home}, away: ${result.penalties.away} },
+` : ""}        goals: [
 ${goals.map(goal => `          ${formatGoal(goal)}`).join(",\n")}
         ]
       }`;
