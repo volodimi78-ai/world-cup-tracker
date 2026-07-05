@@ -1289,7 +1289,15 @@
       m("K85","1/16 финала","2026-07-03T03:00:00Z","Switzerland","Algeria","BC Place Vancouver"),
       m("K86","1/16 финала","2026-07-03T18:00:00Z","Australia","Egypt","Dallas Stadium"),
       m("K87","1/16 финала","2026-07-03T22:00:00Z","Argentina","Cabo Verde","Miami Stadium"),
-      m("K88","1/16 финала","2026-07-04T01:30:00Z","Colombia","Ghana","Kansas City Stadium")
+      m("K88","1/16 финала","2026-07-04T01:30:00Z","Colombia","Ghana","Kansas City Stadium"),
+      m("K89","1/8 финала","2026-07-04T17:00:00Z","Canada","Morocco","Houston Stadium"),
+      m("K90","1/8 финала","2026-07-04T21:00:00Z","Paraguay","France","Philadelphia Stadium"),
+      m("K91","1/8 финала","2026-07-05T20:00:00Z","Brazil","Norway","New York New Jersey Stadium"),
+      m("K92","1/8 финала","2026-07-06T00:00:00Z","Mexico","England","Mexico City Stadium"),
+      m("K93","1/8 финала","2026-07-06T19:00:00Z","Portugal","Spain","Dallas Stadium"),
+      m("K94","1/8 финала","2026-07-07T00:00:00Z","United States","Belgium","Seattle Stadium"),
+      m("K95","1/8 финала","2026-07-07T16:00:00Z","Argentina","Egypt","Atlanta Stadium"),
+      m("K96","1/8 финала","2026-07-07T20:00:00Z","Switzerland","Colombia","BC Place Vancouver")
     ];
 
     const OFFICIAL_RESULTS = {
@@ -2231,6 +2239,17 @@
           { team: "Switzerland", scorer: "Dan Ndoye", minute: 46 }
         ]
       },
+      K86: {
+        home: 1,
+        away: 1,
+        status: "done",
+        source: "Terrikon, 2026-07-04",
+        penalties: { home: 2, away: 4 },
+        goals: [
+          { team: "Egypt", scorer: "Emam Ashour", minute: 13 },
+          { team: "Australia", scorer: "Mohamed Hany", minute: 55, ownGoal: true }
+        ]
+      },
       K87: {
         home: 3,
         away: 2,
@@ -2239,9 +2258,9 @@
         goals: [
           { team: "Argentina", scorer: "Lionel Messi", minute: 29 },
           { team: "Argentina", scorer: "Lautaro Martinez", minute: 92 },
-          { team: "Argentina", scorer: "Ромеро К.", minute: 111 },
-          { team: "Cabo Verde", scorer: "Дуарте Л.", minute: 59 },
-          { team: "Cabo Verde", scorer: "Кабрал C.", minute: 103 }
+          { team: "Argentina", scorer: "Cristian Romero", minute: 111 },
+          { team: "Cabo Verde", scorer: "Deroy Duarte", minute: 59 },
+          { team: "Cabo Verde", scorer: "Sidny Lopes Cabral", minute: 103 }
         ]
       },
       K88: {
@@ -2250,7 +2269,27 @@
         status: "done",
         source: "Terrikon, 2026-07-04",
         goals: [
-          { team: "Colombia", scorer: "Ариас Х.", minute: 14 }
+          { team: "Colombia", scorer: "Jhon Arias", minute: 14 }
+        ]
+      },
+      K89: {
+        home: 0,
+        away: 3,
+        status: "done",
+        source: "Terrikon, 2026-07-04",
+        goals: [
+          { team: "Morocco", scorer: "Soufiane Rahimi", minute: 27 },
+          { team: "Morocco", scorer: "Azzedine Ounahi", minute: 62 },
+          { team: "Morocco", scorer: "Soufiane Rahimi", minute: 84 }
+        ]
+      },
+      K90: {
+        home: 0,
+        away: 1,
+        status: "done",
+        source: "Terrikon, 2026-07-05",
+        goals: [
+          { team: "France", scorer: "Kylian Mbappe", minute: 70 }
         ]
       }
     };
@@ -2286,6 +2325,17 @@
       { match: "K85", label: "03.07 06:00", a: "Switzerland", b: "Algeria" },
       { match: "K88", label: "04.07 04:30", a: "Colombia", b: "Ghana" }
     ];
+
+    const BRACKET_MATCH_IDS = {
+      "R1-0": "K89",
+      "R1-1": "K90",
+      "R1-2": "K91",
+      "R1-3": "K92",
+      "R1-4": "K93",
+      "R1-5": "K94",
+      "R1-6": "K95",
+      "R1-7": "K96"
+    };
 
     const state = loadState();
     const els = {};
@@ -3012,8 +3062,9 @@
     }
 
     function officialTieScore(roundIndex, tieIndex) {
-      if (roundIndex !== 0) return null;
-      const matchId = ROUND_OF_32_SLOTS[tieIndex]?.match;
+      const matchId = roundIndex === 0
+        ? ROUND_OF_32_SLOTS[tieIndex]?.match
+        : BRACKET_MATCH_IDS[`R${roundIndex}-${tieIndex}`];
       const result = matchId ? getResult(matchId) : null;
       if (!result || result.status !== "done") return null;
       if (!Number.isInteger(result.home) || !Number.isInteger(result.away)) return null;
