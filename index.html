@@ -2944,7 +2944,7 @@
       }).join("");
       els.pathMap.innerHTML = `<h3>Как складывается путь дальше</h3>
         <div class="path-map-grid">
-          ${pathMapLines().map(line => `<div class="path-line">${escapeHtml(line)}</div>`).join("")}
+          ${pathMapLines().map(line => `<div class="path-line">${line}</div>`).join("")}
         </div>`;
     }
 
@@ -3012,23 +3012,60 @@
     }
 
     function pathMapLines() {
-      return [
-        "1/8: победитель пары 1 - победитель пары 2",
-        "1/8: победитель пары 3 - победитель пары 4",
-        "1/8: победитель пары 5 - победитель пары 6",
-        "1/8: победитель пары 7 - победитель пары 8",
-        "1/8: победитель пары 9 - победитель пары 10",
-        "1/8: победитель пары 11 - победитель пары 12",
-        "1/8: победитель пары 13 - победитель пары 14",
-        "1/8: победитель пары 15 - победитель пары 16",
-        "1/4: победитель 1/8 матча 1 - победитель 1/8 матча 2",
-        "1/4: победитель 1/8 матча 3 - победитель 1/8 матча 4",
-        "1/4: победитель 1/8 матча 5 - победитель 1/8 матча 6",
-        "1/4: победитель 1/8 матча 7 - победитель 1/8 матча 8",
-        "1/2: победитель 1/4 матча 1 - победитель 1/4 матча 2",
-        "1/2: победитель 1/4 матча 3 - победитель 1/4 матча 4",
-        "Финал: победитель 1/2 матча 1 - победитель 1/2 матча 2"
+      const roundOf16MatchIds = ["K89", "K90", "K91", "K92", "K93", "K94", "K95", "K96"];
+      const roundOf16 = roundOf16MatchIds.map((id, index) => matchupLine(`1/8 матч ${index + 1}`, id, `победитель пары ${index * 2 + 1}`, `победитель пары ${index * 2 + 2}`));
+      const quarterFinals = Array.from({ length: 4 }, (_, index) => {
+        const leftId = roundOf16MatchIds[index * 2];
+        const rightId = roundOf16MatchIds[index * 2 + 1];
+        return pathLine(
+          `1/4 матч ${index + 1}`,
+          winnerLabel(leftId, `победитель 1/8 матча ${index * 2 + 1}`),
+          winnerLabel(rightId, `победитель 1/8 матча ${index * 2 + 2}`)
+        );
+      });
+      const semiFinals = [
+        pathLine("1/2 матч 1", "победитель 1/4 матча 1", "победитель 1/4 матча 2"),
+        pathLine("1/2 матч 2", "победитель 1/4 матча 3", "победитель 1/4 матча 4")
       ];
+      return [
+        ...roundOf16,
+        ...quarterFinals,
+        ...semiFinals,
+        pathLine("Финал", "победитель 1/2 матча 1", "победитель 1/2 матча 2")
+      ];
+    }
+
+    function matchupLine(title, matchId, fallbackHome, fallbackAway) {
+      const match = MATCHES.find(item => item.id === matchId);
+      const home = match?.home || fallbackHome;
+      const away = match?.away || fallbackAway;
+      const result = getResult(matchId);
+      const score = displayScore(result);
+      const winner = winnerLabel(matchId, "");
+      const suffix = winner ? ` <span class="muted">→ ${winner}</span>` : "";
+      return pathLine(`${title}${score ? ` · ${score}` : ""}`, home, away) + suffix;
+    }
+
+    function pathLine(title, left, right) {
+      return `<strong>${escapeHtml(title)}:</strong> ${pathTeamLabel(left)} <span aria-hidden="true">-</span> ${pathTeamLabel(right)}`;
+    }
+
+    function pathTeamLabel(value) {
+      if (!value) return "";
+      return FLAGS[value] ? teamLabel(value) : escapeHtml(value);
+    }
+
+    function winnerLabel(matchId, fallback) {
+      const match = MATCHES.find(item => item.id === matchId);
+      const result = getResult(matchId);
+      if (!match || result.status !== "done" || !Number.isInteger(result.home) || !Number.isInteger(result.away)) return fallback;
+      if (result.home > result.away) return match.home;
+      if (result.away > result.home) return match.away;
+      if (Number.isInteger(result.penalties?.home) && Number.isInteger(result.penalties?.away)) {
+        if (result.penalties.home > result.penalties.away) return match.home;
+        if (result.penalties.away > result.penalties.home) return match.away;
+      }
+      return fallback;
     }
 
     function sourceLabel(roundIndex, tieIndex, sideIndex) {
