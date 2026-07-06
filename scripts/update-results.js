@@ -367,7 +367,11 @@ function formatResults(results) {
   const ids = Object.keys(results).sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
   const chunks = ids.map(id => {
     const result = results[id];
-    const goals = result.goals || [];
+    const goals = [...(result.goals || [])].sort((a, b) => {
+      const minuteA = Number.isInteger(a.minute) ? a.minute : Number.MAX_SAFE_INTEGER;
+      const minuteB = Number.isInteger(b.minute) ? b.minute : Number.MAX_SAFE_INTEGER;
+      return minuteA - minuteB;
+    });
     return `      ${id}: {
         home: ${result.home},
         away: ${result.away},
