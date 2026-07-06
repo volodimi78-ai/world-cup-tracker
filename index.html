@@ -2296,9 +2296,9 @@
         status: "done",
         source: "Terrikon, 2026-07-06",
         goals: [
-          { team: "Brazil", scorer: "Neymar", minute: 100 },
           { team: "Norway", scorer: "Erling Haaland", minute: 79 },
-          { team: "Norway", scorer: "Erling Haaland", minute: 90 }
+          { team: "Norway", scorer: "Erling Haaland", minute: 90 },
+          { team: "Brazil", scorer: "Neymar", minute: 100 }
         ]
       },
       K92: {
@@ -2650,7 +2650,12 @@
         const emptyText = result.home === 0 && result.away === 0 ? "Голов не было." : "Авторы голов пока не внесены.";
         return `<div class="goal-tooltip"><b>Голы</b><span>${emptyText}</span></div>`;
       }
-      const items = result.goals.map(goal => {
+      const goals = [...result.goals].sort((a, b) => {
+        const minuteA = Number.isInteger(a.minute) ? a.minute : Number.MAX_SAFE_INTEGER;
+        const minuteB = Number.isInteger(b.minute) ? b.minute : Number.MAX_SAFE_INTEGER;
+        return minuteA - minuteB;
+      });
+      const items = goals.map(goal => {
         const minute = goal.minute === null || goal.minute === undefined ? "минута не указана" : `${goal.minute}'`;
         const own = goal.ownGoal ? "автогол, " : "";
         const video = videoLink(goal.scorer, match, goal, "видео", "goal-video");
