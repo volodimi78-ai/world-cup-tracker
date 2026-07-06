@@ -1199,6 +1199,10 @@
       "Panama": "🇵🇦"
     };
 
+    const TEAM_DISPLAY_NAMES = {
+      "Norway": "Норвегия"
+    };
+
     const MATCHES = [
       m("G01","A","2026-06-11T19:00:00Z","Mexico","South Africa","Mexico City Stadium"),
       m("G02","A","2026-06-12T02:00:00Z","South Korea","Czechia","Estadio Guadalajara"),
@@ -2298,7 +2302,7 @@
         goals: [
           { team: "Norway", scorer: "Erling Haaland", minute: 79 },
           { team: "Norway", scorer: "Erling Haaland", minute: 90 },
-          { team: "Brazil", scorer: "Neymar", minute: 100 }
+          { team: "Brazil", scorer: "Neymar", minute: "90+10" }
         ]
       },
       K92: {
@@ -2651,17 +2655,24 @@
         return `<div class="goal-tooltip"><b>Голы</b><span>${emptyText}</span></div>`;
       }
       const goals = [...result.goals].sort((a, b) => {
-        const minuteA = Number.isInteger(a.minute) ? a.minute : Number.MAX_SAFE_INTEGER;
-        const minuteB = Number.isInteger(b.minute) ? b.minute : Number.MAX_SAFE_INTEGER;
+        const minuteA = minuteSortValue(a.minute);
+        const minuteB = minuteSortValue(b.minute);
         return minuteA - minuteB;
       });
       const items = goals.map(goal => {
         const minute = goal.minute === null || goal.minute === undefined ? "минута не указана" : `${goal.minute}'`;
         const own = goal.ownGoal ? "автогол, " : "";
         const video = videoLink(goal.scorer, match, goal, "видео", "goal-video");
-        return `<li>${escapeHtml(minute)} · ${escapeHtml(goal.scorer)} (${own}${escapeHtml(goal.team)}) ${video}</li>`;
+        return `<li>${escapeHtml(minute)} · ${escapeHtml(goal.scorer)} (${own}${escapeHtml(teamDisplayName(goal.team))}) ${video}</li>`;
       }).join("");
       return `<div class="goal-tooltip"><b>Голы</b><ul>${items}</ul></div>`;
+    }
+
+    function minuteSortValue(value) {
+      if (Number.isInteger(value)) return value;
+      const match = String(value ?? "").match(/^(\d+)\+(\d+)$/);
+      if (match) return Number(match[1]) + Number(match[2]) / 100;
+      return Number.MAX_SAFE_INTEGER;
     }
 
     function scoreValue(value) {
@@ -3258,7 +3269,11 @@
 
     function teamLabel(team) {
       const flag = FLAGS[team];
-      return `${flag ? `<span class="flag" aria-hidden="true">${escapeHtml(flag)}</span>` : ""}${escapeHtml(team)}`;
+      return `${flag ? `<span class="flag" aria-hidden="true">${escapeHtml(flag)}</span>` : ""}${escapeHtml(teamDisplayName(team))}`;
+    }
+
+    function teamDisplayName(team) {
+      return TEAM_DISPLAY_NAMES[team] || team;
     }
 
     function formatQualifiedItem(text) {
