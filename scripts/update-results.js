@@ -368,8 +368,8 @@ function formatResults(results) {
   const chunks = ids.map(id => {
     const result = results[id];
     const goals = [...(result.goals || [])].sort((a, b) => {
-      const minuteA = Number.isInteger(a.minute) ? a.minute : Number.MAX_SAFE_INTEGER;
-      const minuteB = Number.isInteger(b.minute) ? b.minute : Number.MAX_SAFE_INTEGER;
+      const minuteA = minuteSortValue(a.minute);
+      const minuteB = minuteSortValue(b.minute);
       return minuteA - minuteB;
     });
     return `      ${id}: {
@@ -384,6 +384,22 @@ ${goals.map(goal => `          ${formatGoal(goal)}`).join(",\n")}
       }`;
   });
   return `{\n${chunks.join(",\n")}\n    }`;
+}
+
+function minuteSortValue(value) {
+  if (Number.isInteger(value)) return value;
+  const match = String(value ?? "").match(/^(\d+)\+(\d+)$/);
+  if (match) return Number(match[1]) + Number(match[2]) / 100;
+  return Number.MAX_SAFE_INTEGER;
+}
+
+function normalizeGoals(matchId, goals) {
+  return goals.map(goal => {
+    if (matchId === "K91" && goal.scorer === "Neymar" && goal.minute === 100) {
+      return { ...goal, minute: "90+10" };
+    }
+    return goal;
+  });
 }
 
 async function main() {
@@ -434,7 +450,7 @@ async function main() {
       away: terrikonMatch.awayScore,
       status: "done",
       source: `Terrikon, ${new Date().toISOString().slice(0, 10)}`,
-      goals
+      goals: normalizeGoals(local.id, goals)
     };
     changed = true;
     console.log(`Updated ${local.id}: ${terrikonMatch.home} ${terrikonMatch.homeScore}-${terrikonMatch.awayScore} ${terrikonMatch.away}`);
