@@ -71,6 +71,7 @@ const PLAYER_MAP = {
   "Ангуло": "Nilson Angulo",
   "Унахи А.": "Azzedine Ounahi",
   "Арнаутович": "Marko Arnautovic",
+  "Неймар": "Neymar",
   "Баэна А.": "Alex Baena",
   "Белгали": "Rafik Belghali",
   "Батурина М.": "Martin Baturina",
