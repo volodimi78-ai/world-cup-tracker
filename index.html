@@ -378,10 +378,16 @@
 
     .teams {
       display: grid;
-      grid-template-columns: 1fr auto 1fr;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
       align-items: center;
       gap: 8px;
       font-weight: 700;
+    }
+
+    .teams > span {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      line-height: 1.2;
     }
 
     .teams .away { text-align: right; }
@@ -1197,10 +1203,6 @@
       "Croatia": "🇭🇷",
       "Ghana": "🇬🇭",
       "Panama": "🇵🇦"
-    };
-
-    const TEAM_DISPLAY_NAMES = {
-      "Norway": "Норвегия"
     };
 
     const MATCHES = [
@@ -2663,7 +2665,7 @@
         const minute = goal.minute === null || goal.minute === undefined ? "минута не указана" : `${goal.minute}'`;
         const own = goal.ownGoal ? "автогол, " : "";
         const video = videoLink(goal.scorer, match, goal, "видео", "goal-video");
-        return `<li>${escapeHtml(minute)} · ${escapeHtml(goal.scorer)} (${own}${escapeHtml(teamDisplayName(goal.team))}) ${video}</li>`;
+        return `<li>${escapeHtml(minute)} · ${escapeHtml(goal.scorer)} (${own}${escapeHtml(goal.team)}) ${video}</li>`;
       }).join("");
       return `<div class="goal-tooltip"><b>Голы</b><ul>${items}</ul></div>`;
     }
@@ -3269,11 +3271,7 @@
 
     function teamLabel(team) {
       const flag = FLAGS[team];
-      return `${flag ? `<span class="flag" aria-hidden="true">${escapeHtml(flag)}</span>` : ""}${escapeHtml(teamDisplayName(team))}`;
-    }
-
-    function teamDisplayName(team) {
-      return TEAM_DISPLAY_NAMES[team] || team;
+      return `${flag ? `<span class="flag" aria-hidden="true">${escapeHtml(flag)}</span>` : ""}${escapeHtml(team)}`;
     }
 
     function formatQualifiedItem(text) {
