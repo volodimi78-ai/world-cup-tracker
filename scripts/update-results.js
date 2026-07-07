@@ -130,6 +130,7 @@ const PLAYER_MAP = {
   "Мастури": "Mastouri",
   "Маркус Рэшфорд": "Marcus Rashford",
   "Марко Арнаутович": "Marko Arnautovic",
+  "Мерино": "Mikel Merino",
   "Мемич Ам.": "Amar Memic",
   "Мендеш Н.": "Nuno Mendes",
   "Манаи": "Al-Mannai",
@@ -197,6 +198,8 @@ const PLAYER_MAP = {
   "Яссин": "Yassine",
   "ван Хекке": "Jan Paul van Hecke",
   "де Брюйне": "Kevin De Bruyne",
+  "де Кетеларе": "Charles De Ketelaere",
+  "Ванакен": "Hans Vanaken",
   "Язан Аль-Араб": "Yazan Al-Arab"
 };
 
@@ -397,6 +400,15 @@ function normalizeGoals(matchId, goals) {
   return goals.map(goal => {
     if (matchId === "K91" && goal.scorer === "Neymar" && goal.minute === 100) {
       return { ...goal, minute: "90+10" };
+    }
+    if (matchId === "K93" && goal.scorer === "Mikel Merino" && goal.minute === 91) {
+      return { ...goal, minute: "90+1" };
+    }
+    if (matchId === "K94" && goal.scorer === "Malik Tillman" && goal.minute === 30) {
+      return { ...goal, minute: 31 };
+    }
+    if (matchId === "K94" && goal.scorer === "Romelu Lukaku" && goal.minute === 93) {
+      return { ...goal, minute: "90+3" };
     }
     return goal;
   });
