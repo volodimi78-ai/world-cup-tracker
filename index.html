@@ -1313,7 +1313,11 @@
       m("K93","1/8 финала","2026-07-06T19:00:00Z","Portugal","Spain","Dallas Stadium"),
       m("K94","1/8 финала","2026-07-07T00:00:00Z","United States","Belgium","Seattle Stadium"),
       m("K95","1/8 финала","2026-07-07T16:00:00Z","Argentina","Egypt","Atlanta Stadium"),
-      m("K96","1/8 финала","2026-07-07T20:00:00Z","Switzerland","Colombia","BC Place Vancouver")
+      m("K96","1/8 финала","2026-07-07T20:00:00Z","Switzerland","Colombia","BC Place Vancouver"),
+      m("K97","1/4 финала","2026-07-09T20:00:00Z","France","Morocco","Boston Stadium"),
+      m("K98","1/4 финала","2026-07-10T19:00:00Z","Spain","Belgium","SoFi Stadium"),
+      m("K99","1/4 финала","2026-07-11T21:00:00Z","Norway","England","Miami Stadium"),
+      m("K100","1/4 финала","2026-07-12T01:00:00Z","Argentina","Switzerland","Kansas City Stadium")
     ];
 
     const OFFICIAL_RESULTS = {
@@ -2418,7 +2422,11 @@
       "R1-4": "K93",
       "R1-5": "K94",
       "R1-6": "K95",
-      "R1-7": "K96"
+      "R1-7": "K96",
+      "R2-0": "K97",
+      "R2-1": "K98",
+      "R2-2": "K99",
+      "R2-3": "K100"
     };
 
     const state = loadState();
@@ -2999,6 +3007,15 @@
 
     function tieTeams(roundIndex, tieIndex) {
       if (roundIndex === 0) return roundOf32TieTeams(tieIndex);
+      const officialMatch = officialBracketMatch(roundIndex, tieIndex);
+      if (officialMatch) {
+        return {
+          a: officialMatch.home,
+          b: officialMatch.away,
+          aLabel: sourceLabel(roundIndex, tieIndex, 0),
+          bLabel: sourceLabel(roundIndex, tieIndex, 1)
+        };
+      }
       const tie = state.bracket[`R${roundIndex}-${tieIndex}`] || {};
       return {
         a: previousWinner(roundIndex, tieIndex * 2) || tie.a || "",
@@ -3006,6 +3023,11 @@
         aLabel: sourceLabel(roundIndex, tieIndex, 0),
         bLabel: sourceLabel(roundIndex, tieIndex, 1)
       };
+    }
+
+    function officialBracketMatch(roundIndex, tieIndex) {
+      const matchId = BRACKET_MATCH_IDS[`R${roundIndex}-${tieIndex}`];
+      return matchId ? MATCHES.find(match => match.id === matchId) : null;
     }
 
     function renderBracket() {
@@ -3109,20 +3131,18 @@
 
     function pathMapLines() {
       const roundOf16MatchIds = ["K89", "K90", "K91", "K92", "K93", "K94", "K95", "K96"];
+      const quarterFinalMatchIds = ["K97", "K98", "K99", "K100"];
       const roundOf16 = roundOf16MatchIds.map((id, index) => matchupLine(`1/8 матч ${index + 1}`, id, `победитель пары ${index * 2 + 1}`, `победитель пары ${index * 2 + 2}`));
-      const quarterFinals = Array.from({ length: 4 }, (_, index) => {
+      const quarterFinals = quarterFinalMatchIds.map((id, index) => matchupLine(`1/4 матч ${index + 1}`, id, `победитель 1/8 матча ${index * 2 + 1}`, `победитель 1/8 матча ${index * 2 + 2}`));
+      const semiFinals = Array.from({ length: 2 }, (_, index) => {
         const leftId = roundOf16MatchIds[index * 2];
         const rightId = roundOf16MatchIds[index * 2 + 1];
         return pathLine(
-          `1/4 матч ${index + 1}`,
-          winnerLabel(leftId, `победитель 1/8 матча ${index * 2 + 1}`),
-          winnerLabel(rightId, `победитель 1/8 матча ${index * 2 + 2}`)
+          `1/2 матч ${index + 1}`,
+          `победитель 1/4 матча ${index * 2 + 1}`,
+          `победитель 1/4 матча ${index * 2 + 2}`
         );
       });
-      const semiFinals = [
-        pathLine("1/2 матч 1", "победитель 1/4 матча 1", "победитель 1/4 матча 2"),
-        pathLine("1/2 матч 2", "победитель 1/4 матча 3", "победитель 1/4 матча 4")
-      ];
       return [
         ...roundOf16,
         ...quarterFinals,
