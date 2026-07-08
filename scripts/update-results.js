@@ -91,6 +91,7 @@ const PLAYER_MAP = {
   "Галарса": "Matias Galarza",
   "Гуйе П.А.": "Pape Gueye",
   "Гюлер А.": "Arda Guler",
+  "Ибрагим": "Ibrahim",
   "Джака Г.": "Granit Xhaka",
   "Дуарте Л.": "Deroy Duarte",
   "Дэвид Дж.": "Jonathan David",
@@ -177,6 +178,7 @@ const PLAYER_MAP = {
   "Сане Л.": "Leroy Sane",
   "Сабитцер": "Marcel Sabitzer",
   "Забитцер": "Marcel Sabitzer",
+  "Зико": "Mostafa Zico",
   "Сарр Ис.": "Ismaila Sarr",
   "Скири": "Ellyes Skhiri",
   "Сипенга": "Brian Cipenga",
@@ -188,6 +190,7 @@ const PLAYER_MAP = {
   "Сучич П.": "Petar Sucic",
   "Варгас Р.": "Ruben Vargas",
   "Фидальго": "Alvaro Fidalgo",
+  "Фернандес Э.": "Enzo Fernandez",
   "Фримен": "Alex Freeman",
   "Хакими": "Achraf Hakimi",
   "Холанд Э.": "Erling Haaland",
@@ -409,6 +412,9 @@ function normalizeGoals(matchId, goals) {
     }
     if (matchId === "K94" && goal.scorer === "Romelu Lukaku" && goal.minute === 93) {
       return { ...goal, minute: "90+3" };
+    }
+    if (matchId === "K95" && goal.scorer === "Enzo Fernandez" && goal.minute === 92) {
+      return { ...goal, minute: "90+2" };
     }
     return goal;
   });
