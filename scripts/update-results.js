@@ -190,6 +190,7 @@ const PLAYER_MAP = {
   "Сучич П.": "Petar Sucic",
   "Варгас Р.": "Ruben Vargas",
   "Фидальго": "Alvaro Fidalgo",
+  "Фабиан Руис": "Fabian Ruiz",
   "Фернандес Э.": "Enzo Fernandez",
   "Фримен": "Alex Freeman",
   "Хакими": "Achraf Hakimi",
