@@ -1317,7 +1317,9 @@
       m("K97","1/4 финала","2026-07-09T20:00:00Z","France","Morocco","Boston Stadium"),
       m("K98","1/4 финала","2026-07-10T19:00:00Z","Spain","Belgium","SoFi Stadium"),
       m("K99","1/4 финала","2026-07-11T21:00:00Z","Norway","England","Miami Stadium"),
-      m("K100","1/4 финала","2026-07-12T01:00:00Z","Argentina","Switzerland","Kansas City Stadium")
+      m("K100","1/4 финала","2026-07-12T01:00:00Z","Argentina","Switzerland","Kansas City Stadium"),
+      m("K101","1/2 финала","2026-07-14T19:00:00Z","France","Spain","Dallas Stadium"),
+      m("K102","1/2 финала","2026-07-16T00:00:00Z","England","Argentina","Atlanta Stadium")
     ];
 
     const OFFICIAL_RESULTS = {
@@ -2401,6 +2403,29 @@
           { team: "Belgium", scorer: "Charles De Ketelaere", minute: 41 },
           { team: "Spain", scorer: "Mikel Merino", minute: 88 }
         ]
+      },
+      K99: {
+        home: 1,
+        away: 2,
+        status: "done",
+        source: "Terrikon, Guardian, AP, 2026-07-12",
+        goals: [
+          { team: "Norway", scorer: "Andreas Schjelderup", minute: 36 },
+          { team: "England", scorer: "Jude Bellingham", minute: 45 },
+          { team: "England", scorer: "Jude Bellingham", minute: 93 }
+        ]
+      },
+      K100: {
+        home: 3,
+        away: 1,
+        status: "done",
+        source: "Terrikon, Guardian, AP, 2026-07-12",
+        goals: [
+          { team: "Argentina", scorer: "Alexis Mac Allister", minute: 10 },
+          { team: "Switzerland", scorer: "Dan Ndoye", minute: 67 },
+          { team: "Argentina", scorer: "Julian Alvarez", minute: 112 },
+          { team: "Argentina", scorer: "Lautaro Martinez", minute: "120+1" }
+        ]
       }
     };
 
@@ -2448,7 +2473,9 @@
       "R2-0": "K97",
       "R2-1": "K98",
       "R2-2": "K99",
-      "R2-3": "K100"
+      "R2-3": "K100",
+      "R3-0": "K101",
+      "R3-1": "K102"
     };
 
     const state = loadState();
@@ -3098,7 +3125,8 @@
       const seeded = tieTeams(roundIndex, tieIndex);
       const a = seeded.a || tie.a || "";
       const b = seeded.b || tie.b || "";
-      const matchLabel = roundIndex === 0 && (seeded.label || seeded.match) ? (seeded.label || `Матч ${seeded.match}`) : roundDateLabel(roundIndex, tieIndex);
+      const officialMatch = officialBracketMatch(roundIndex, tieIndex);
+      const matchLabel = officialMatch ? formatDate(officialMatch.utc) : roundIndex === 0 && (seeded.label || seeded.match) ? (seeded.label || `Матч ${seeded.match}`) : roundDateLabel(roundIndex, tieIndex);
       const officialScore = officialTieScore(roundIndex, tieIndex);
       const scoreA = officialScore?.sa ?? tie.sa;
       const scoreB = officialScore?.sb ?? tie.sb;
@@ -3154,17 +3182,10 @@
     function pathMapLines() {
       const roundOf16MatchIds = ["K89", "K90", "K91", "K92", "K93", "K94", "K95", "K96"];
       const quarterFinalMatchIds = ["K97", "K98", "K99", "K100"];
+      const semiFinalMatchIds = ["K101", "K102"];
       const roundOf16 = roundOf16MatchIds.map((id, index) => matchupLine(`1/8 матч ${index + 1}`, id, `победитель пары ${index * 2 + 1}`, `победитель пары ${index * 2 + 2}`));
       const quarterFinals = quarterFinalMatchIds.map((id, index) => matchupLine(`1/4 матч ${index + 1}`, id, `победитель 1/8 матча ${index * 2 + 1}`, `победитель 1/8 матча ${index * 2 + 2}`));
-      const semiFinals = Array.from({ length: 2 }, (_, index) => {
-        const leftId = roundOf16MatchIds[index * 2];
-        const rightId = roundOf16MatchIds[index * 2 + 1];
-        return pathLine(
-          `1/2 матч ${index + 1}`,
-          `победитель 1/4 матча ${index * 2 + 1}`,
-          `победитель 1/4 матча ${index * 2 + 2}`
-        );
-      });
+      const semiFinals = semiFinalMatchIds.map((id, index) => matchupLine(`1/2 матч ${index + 1}`, id, `победитель 1/4 матча ${index * 2 + 1}`, `победитель 1/4 матча ${index * 2 + 2}`));
       return [
         ...roundOf16,
         ...quarterFinals,
