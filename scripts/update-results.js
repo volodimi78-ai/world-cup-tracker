@@ -61,6 +61,7 @@ const PLAYER_MAP = {
   "Аббосбек Файзуллаев": "Abbosbek Fayzullaev",
   "Аймен Хуссейн": "Aymen Hussein",
   "Али Олван": "Ali Olwan",
+  "Альварес Хул.": "Julian Alvarez",
   "Амад Диалло": "Amad Diallo",
   "Диалло Траоре Ам.": "Amad Diallo",
   "Айхан К.": "Kaan Ayhan",
@@ -132,6 +133,7 @@ const PLAYER_MAP = {
   "Маркус Рэшфорд": "Marcus Rashford",
   "Марко Арнаутович": "Marko Arnautovic",
   "Мерино": "Mikel Merino",
+  "Макаллистер А.": "Alexis Mac Allister",
   "Мемич Ам.": "Amar Memic",
   "Мендеш Н.": "Nuno Mendes",
   "Манаи": "Al-Mannai",
@@ -198,6 +200,7 @@ const PLAYER_MAP = {
   "Чавес М.": "M. Chavez",
   "Шомуродов": "Eldor Shomurodov",
   "Шмид Р.": "Romano Schmid",
+  "Шельдеруп": "Andreas Schjelderup",
   "Эланга": "Anthony Elanga",
   "Яссин": "Yassine",
   "ван Хекке": "Jan Paul van Hecke",
@@ -416,6 +419,9 @@ function normalizeGoals(matchId, goals) {
     }
     if (matchId === "K95" && goal.scorer === "Enzo Fernandez" && goal.minute === 92) {
       return { ...goal, minute: "90+2" };
+    }
+    if (matchId === "K100" && goal.scorer === "Lautaro Martinez" && goal.minute === 121) {
+      return { ...goal, minute: "120+1" };
     }
     return goal;
   });
