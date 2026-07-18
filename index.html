@@ -946,6 +946,21 @@
       pointer-events: none;
     }
 
+    .third-place-bracket {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: minmax(260px, 420px);
+      gap: 10px;
+    }
+
+    .third-place-bracket h3 {
+      margin: 0 0 6px;
+      font-size: 15px;
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
     .empty {
       border: 1px dashed var(--line);
       color: var(--muted);
@@ -1145,6 +1160,7 @@
         <div class="bracket">
           <div id="bracketInner" class="bracket-inner"></div>
         </div>
+        <div id="thirdPlaceBracket" class="third-place-bracket"></div>
       </section>
 
     </main>
@@ -2498,7 +2514,8 @@
       "R2-2": "K99",
       "R2-3": "K100",
       "R3-0": "K101",
-      "R3-1": "K102"
+      "R3-1": "K102",
+      "R4-0": "K103"
     };
 
     const state = loadState();
@@ -2586,7 +2603,8 @@
         qualified: document.querySelector("#qualified"),
         bracketOverview: document.querySelector("#bracketOverview"),
         pathMap: document.querySelector("#pathMap"),
-        bracketInner: document.querySelector("#bracketInner")
+        bracketInner: document.querySelector("#bracketInner"),
+        thirdPlaceBracket: document.querySelector("#thirdPlaceBracket")
       });
 
       els.groupFilter.innerHTML = '<option value="all">Все группы</option>' +
@@ -3117,10 +3135,37 @@
         return `<div class="round"><h3>${name}</h3>${ties.join("")}</div>`;
       });
       els.bracketInner.innerHTML = rounds.join("");
+      renderThirdPlaceBracket();
 
       els.bracketInner.querySelectorAll("select,input").forEach(el => {
         el.addEventListener("input", handleBracketInput);
       });
+    }
+
+    function renderThirdPlaceBracket() {
+      const match = MATCHES.find(item => item.id === "K104");
+      if (!match) {
+        els.thirdPlaceBracket.innerHTML = "";
+        return;
+      }
+      const result = getResult(match.id);
+      const scoreA = result && Number.isInteger(result.home) ? result.home : null;
+      const scoreB = result && Number.isInteger(result.away) ? result.away : null;
+      const winner = Number.isInteger(scoreA) && Number.isInteger(scoreB) && scoreA !== scoreB ? (scoreA > scoreB ? "a" : "b") : "";
+      els.thirdPlaceBracket.innerHTML = `<div>
+        <h3>Матч за 3-е место</h3>
+        <div class="tie">
+          <div class="tie-meta">
+            <span>${escapeHtml(formatDate(match.utc))}</span>
+            <span>${escapeHtml(match.venue)}</span>
+          </div>
+          <div class="tie-teams">
+            ${teamSlot("K104-bracket", "a", "sa", match.home, "проигравший 1/2 матча 1", scoreValue(scoreA), winner === "a", 0, 0, true)}
+            ${teamSlot("K104-bracket", "b", "sb", match.away, "проигравший 1/2 матча 2", scoreValue(scoreB), winner === "b", 0, 0, true)}
+          </div>
+          <div class="tie-path">Победитель занимает 3-е место</div>
+        </div>
+      </div>`;
     }
 
     function renderBracketOverview() {
@@ -3213,7 +3258,8 @@
         ...roundOf16,
         ...quarterFinals,
         ...semiFinals,
-        pathLine("Финал", "победитель 1/2 матча 1", "победитель 1/2 матча 2")
+        matchupLine("Матч за 3-е место", "K104", "проигравший 1/2 матча 1", "проигравший 1/2 матча 2"),
+        matchupLine("Финал", "K103", "победитель 1/2 матча 1", "победитель 1/2 матча 2")
       ];
     }
 
