@@ -912,6 +912,12 @@
       font-weight: 800;
     }
 
+    .third-place-tie {
+      margin-top: 16px;
+      border-color: rgba(183, 128, 24, .32);
+      background: rgba(255, 248, 232, .68);
+    }
+
     .tie-team-name {
       min-width: 0;
       display: -webkit-box;
@@ -1160,7 +1166,6 @@
         <div class="bracket">
           <div id="bracketInner" class="bracket-inner"></div>
         </div>
-        <div id="thirdPlaceBracket" class="third-place-bracket"></div>
       </section>
 
     </main>
@@ -2603,8 +2608,7 @@
         qualified: document.querySelector("#qualified"),
         bracketOverview: document.querySelector("#bracketOverview"),
         pathMap: document.querySelector("#pathMap"),
-        bracketInner: document.querySelector("#bracketInner"),
-        thirdPlaceBracket: document.querySelector("#thirdPlaceBracket")
+        bracketInner: document.querySelector("#bracketInner")
       });
 
       els.groupFilter.innerHTML = '<option value="all">Все группы</option>' +
@@ -3132,39 +3136,33 @@
 
       const rounds = ROUND_SIZES.map(([name, count], roundIndex) => {
         const ties = Array.from({ length: count }, (_, tieIndex) => tieCard(roundIndex, tieIndex));
-        return `<div class="round"><h3>${name}</h3>${ties.join("")}</div>`;
+        const thirdPlaceTie = roundIndex === ROUND_SIZES.length - 1 ? thirdPlaceTieCard() : "";
+        return `<div class="round"><h3>${name}</h3>${ties.join("")}${thirdPlaceTie}</div>`;
       });
       els.bracketInner.innerHTML = rounds.join("");
-      renderThirdPlaceBracket();
 
       els.bracketInner.querySelectorAll("select,input").forEach(el => {
         el.addEventListener("input", handleBracketInput);
       });
     }
 
-    function renderThirdPlaceBracket() {
+    function thirdPlaceTieCard() {
       const match = MATCHES.find(item => item.id === "K104");
-      if (!match) {
-        els.thirdPlaceBracket.innerHTML = "";
-        return;
-      }
+      if (!match) return "";
       const result = getResult(match.id);
       const scoreA = result && Number.isInteger(result.home) ? result.home : null;
       const scoreB = result && Number.isInteger(result.away) ? result.away : null;
       const winner = Number.isInteger(scoreA) && Number.isInteger(scoreB) && scoreA !== scoreB ? (scoreA > scoreB ? "a" : "b") : "";
-      els.thirdPlaceBracket.innerHTML = `<div>
-        <h3>Матч за 3-е место</h3>
-        <div class="tie">
-          <div class="tie-meta">
-            <span>${escapeHtml(formatDate(match.utc))}</span>
-            <span>${escapeHtml(match.venue)}</span>
-          </div>
-          <div class="tie-teams">
-            ${teamSlot("K104-bracket", "a", "sa", match.home, "проигравший 1/2 матча 1", scoreValue(scoreA), winner === "a", 0, 0, true)}
-            ${teamSlot("K104-bracket", "b", "sb", match.away, "проигравший 1/2 матча 2", scoreValue(scoreB), winner === "b", 0, 0, true)}
-          </div>
-          <div class="tie-path">Победитель занимает 3-е место</div>
+      return `<div class="tie third-place-tie">
+        <div class="tie-meta">
+          <span>Матч за 3-е место</span>
+          <span>${escapeHtml(formatDate(match.utc))}</span>
         </div>
+        <div class="tie-teams">
+          ${teamSlot("K104-bracket", "a", "sa", match.home, "проигравший 1/2 матча 1", scoreValue(scoreA), winner === "a", 0, 0, true)}
+          ${teamSlot("K104-bracket", "b", "sb", match.away, "проигравший 1/2 матча 2", scoreValue(scoreB), winner === "b", 0, 0, true)}
+        </div>
+        <div class="tie-path">${escapeHtml(match.venue)} · победитель занимает 3-е место</div>
       </div>`;
     }
 
